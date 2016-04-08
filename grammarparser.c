@@ -150,7 +150,6 @@ void condition (Token *tempList)
 	}
 }
 
-=======
 void statement(Token *tempList){
 	if(tempList->type == identsym){
 		tempList = tempList->next;
