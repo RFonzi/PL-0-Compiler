@@ -2,7 +2,6 @@
 #include "symboltable.h"
 
 
-Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 
 
 void program(Token *tokenlist)

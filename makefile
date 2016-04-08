@@ -1,7 +1,7 @@
 CC = gcc
 
 PROG = pl0c.exe
-SRCS = main.c scanner.c tokenlist.c cpu.c stack.c grammarparser.c error.c
+SRCS = main.c scanner.c tokenlist.c cpu.c stack.c symboltable.c grammarparser.c error.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -20,13 +20,16 @@ cpu.o : cpu.c cpu.h stack.h
 stack.o : stack.c stack.h
 	$(CC) -g -c stack.c
 
+symboltable.o : symboltable.c symboltable.h
+	$(CC) -g -c symboltable.c
+
 grammarparser.o : grammarparser.c tokenlist.h symboltable.h
 	$(CC) -g -c grammarparser.c
 
 error.o : error.c error.h
 	$(CC) -g -c error.c
 
-main.o : main.c scanner.h tokenlist.h cpu.h stack.h error.c
+main.o : main.c scanner.h tokenlist.h cpu.h stack.h error.h symboltable.h
 	$(CC) -g -c main.c
 
 clean :

@@ -11,6 +11,10 @@ typedef struct symbol{
      int addr;      // M address
  } Symbol;
 
+extern int numSymbols;
 extern Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
+
+void addConst(int kind, char* name, int val);
+void addVarOrProc(int kind, char* name, int level, int addr);
 
 #endif //SYMBOL_TABLE
