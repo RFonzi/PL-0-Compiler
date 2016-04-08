@@ -13,7 +13,7 @@ void program(Token *tokenlist)
 
 	if (tempList->type != periodsym)
 	{
-		// period missing error
+		error(PERIOD_EXPECTED); // period missing error
 	}
 
 }
@@ -25,17 +25,17 @@ void block (Token *tempList)
 		tempList = tempList->next;
 		if (tempList->type != identsym)
 		{
-			// error
+			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
 		tempList = tempList->next;
 		if (tempList->type != eqsym)
 		{
-			// error
+			error (EQ_MUST_FOLLOW_IDENT); // equals must follow identifier error
 		}
 		tempList = tempList->next;
 		if (tempList->type != numbersym)
 		{
-			//error
+			error (NUM_MUST_FOLLOW_EQ); // equals must be followed by number error
 		}
 
 		tempList = tempList->next;
@@ -44,23 +44,23 @@ void block (Token *tempList)
 			tempList = tempList->next;
 			if (tempList->type != identsym)
 			{
-				// error
+				error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 			}
 			tempList = tempList->next;
 			if (tempList->type != eqsym)
 			{
-				// error
+				error (EQ_MUST_FOLLOW_IDENT); // equals must follow identifier error
 			}
 			tempList = tempList->next;
 			if (tempList->type != numbersym)
 			{
-				//error
+				error (NUM_MUST_FOLLOW_EQ); // equals must be followed by number error
 			}
 			tempList = tempList->next;
 		}
 		if (tempList->type != semicolonsym)
 		{
-			// missing semi colon error
+			error(SEMICOLON_COMMA_MISSING); // missing semi colon error
 		}
 		tempList = tempList->next;
 	}
@@ -70,7 +70,7 @@ void block (Token *tempList)
 
 		if (tempList->type != identsym)
 		{
-			// error
+			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
 
 		tempList = tempList->next;
@@ -81,7 +81,7 @@ void block (Token *tempList)
 
 			if (tempList->type != identsym)
 			{
-				// error
+				error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 			}
 
 			tempList = tempList->next;
@@ -89,7 +89,7 @@ void block (Token *tempList)
 
 		if (tempList->type != semicolonsym)
 		{
-			// missing semi colon error
+			error(SEMICOLON_COMMA_MISSING); // missing semi colon error
 		}
 
 		tempList = tempList->next;
@@ -100,14 +100,14 @@ void block (Token *tempList)
 
 		if (tempList->type != identsym)
 		{
-			// error
+			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
 
 		tempList = tempList->next;
 
 		if (tempList->type != semicolonsym)
 		{
-			// error missing semi colon
+			error(SEMICOLON_COMMA_MISSING); // missing semi colon error
 		}
 
 		tempList = tempList->next;
@@ -118,7 +118,7 @@ void block (Token *tempList)
 
 		if (tempList->type != semicolonsym)
 		{
-			// error missing semi colon
+			error(SEMICOLON_COMMA_MISSING); // missing semi colon error
 		}
 
 	}
@@ -127,7 +127,6 @@ void block (Token *tempList)
 }
 
 
-<<<<<<< Updated upstream
 void condition (Token *tempList)
 {
 	tempList = tempList->next;
@@ -142,7 +141,7 @@ void condition (Token *tempList)
 		expression(&tempList);
 		if (relation(&tempList) == 0)
 		{
-			// error
+			error (RELATIONAL_OP_EXPECTED); // missing relational op error
 		}
 
 		tempList = tempList->next;
@@ -207,7 +206,36 @@ void statement(Token *tempList){
 
 		statement(tempList);
 	}
+}
 
+
+void expression (Token *tempList)
+{
+	if (tempList->type == plussym || tempList->type == minussym)
+	{
+		tempList = tempList->next;
+	}
+	
+	term (&tempList);
+	
+	while (tempList->type == plussym || tempList->type == minussym)
+	{
+		tempList = tempList->next;
+		term (&tempList);
+	}
+	
+}
+
+void term (Token *tempList)
+{
+	factor (&tempList);
+	
+	while (tempList->type == multsym || tempList->type == slashsym)
+	{
+		tempList = tempList->next;
+		factor (&tempList);
+	}
+	
 }
 
 void factor(Token *tempList){
