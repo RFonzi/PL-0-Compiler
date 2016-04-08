@@ -127,7 +127,47 @@ void block (Token *tempList)
 }
 
 
+void condition (Token *tempList)
+{
+	tempList = tempList->next;
+	
+	if (tempList->type == oddsym)
+	{
+		tempList = tempList->next;
+		expression(&tempList);
+	}
+	else
+	{
+		expression(&tempList);
+		if (relation(&tempList) == 0)
+		{
+			// error
+		}
+		
+		tempList = tempList->next;
+		expression(&tempList);
+	}
+}
 
+
+
+int relation (Token *tempList)
+{
+	if (tempList->type == eqsym)
+		return 1;
+	if (tempList->type == neqsym)
+		return 1;
+	if (tempList->type == lessym)
+		return 1;
+	if (tempList->type == leqsym)
+		return 1;
+	if (tempList->type == gtrsym)
+		return 1;
+	if (tempList->type == geqsym)
+		return 1;
+	
+	return 0;
+}
 
 
 
