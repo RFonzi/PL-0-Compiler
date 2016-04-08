@@ -91,6 +91,46 @@ void block (Token *tempList)
 		{
 			// missing semi colon error
 		}
+		
+		tempList = tempList->next;
+	}
+	while (tempList->type == procsym)
+	{
+		tempList = tempList->next;
+		
+		if (tempList->type != identsym)
+		{
+			// error
+		}
+		
+		tempList = tempList->next;
+		
+		if (tempList->type != semicolonsym)
+		{
+			// error missing semi colon
+		}
+		
+		tempList = tempList->next;
+		
+		block(&tempList);
+		
+		tempList = tempList->next;
+		
+		if (tempList->type != semicolonsym)
+		{
+			// error missing semi colon
+		}
+		
 	}
 	
+	statement (&tempList);
 }
+
+
+
+
+
+
+
+
+
