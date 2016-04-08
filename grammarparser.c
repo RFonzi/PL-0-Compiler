@@ -1,9 +1,12 @@
 #include "scanner.h"
 #include "Tokenlist.h"
+#include "symboltable.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
+Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 
 
 void program(Token *tokenlist)
@@ -215,27 +218,27 @@ void expression (Token *tempList)
 	{
 		tempList = tempList->next;
 	}
-	
+
 	term (&tempList);
-	
+
 	while (tempList->type == plussym || tempList->type == minussym)
 	{
 		tempList = tempList->next;
 		term (&tempList);
 	}
-	
+
 }
 
 void term (Token *tempList)
 {
 	factor (&tempList);
-	
+
 	while (tempList->type == multsym || tempList->type == slashsym)
 	{
 		tempList = tempList->next;
 		factor (&tempList);
 	}
-	
+
 }
 
 void factor(Token *tempList){
