@@ -1,10 +1,6 @@
-#include "scanner.h"
 #include "Tokenlist.h"
 #include "symboltable.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
+
 
 Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 
