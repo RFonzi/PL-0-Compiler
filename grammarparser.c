@@ -1,5 +1,5 @@
 #include "scanner.h"
-#include "tokenlist.h"
+#include "tempListlist.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,85 +8,86 @@
 
 void program(Token *tokenlist)
 {
-	block (&Token);
+	Token * tempList = tokenList;
+	block (&tempList);
 	
-	if (Token->type != periodsym)
+	if (tempList->type != periodsym)
 	{
 		// period missing error
 	}
 		
 }
 
-void block (Token *tokenlist)
+void block (Token *tempList)
 {
-	if (Token->type == constsym)
+	if (tempList->type == constsym)
 	{
-		Token = Token->next;
-		if (Token->type != identsym)
+		tempList = tempList->next;
+		if (tempList->type != identsym)
 		{
 			// error
 		}
-		Token = Token->next;
-		if (Token->type != eqsym)
+		tempList = tempList->next;
+		if (tempList->type != eqsym)
 		{
 			// error
 		}
-		Token = Token->next;
-		if (Token->type != numbersym)
+		tempList = tempList->next;
+		if (tempList->type != numbersym)
 		{
 			//error
 		}
 			
-		Token = Token->next;
-		while (Token->type == commasym)
+		tempList = tempList->next;
+		while (tempList->type == commasym)
 		{
-			Token = Token->next;
-			if (Token->type != identsym)
+			tempList = tempList->next;
+			if (tempList->type != identsym)
 			{
 				// error
 			}
-			Token = Token->next;
-			if (Token->type != eqsym)
+			tempList = tempList->next;
+			if (tempList->type != eqsym)
 			{
 				// error
 			}
-			Token = Token->next;
-			if (Token->type != numbersym)
+			tempList = tempList->next;
+			if (tempList->type != numbersym)
 			{
 				//error
 			}
-			Token = Token->next;
+			tempList = tempList->next;
 		}
-		if (Token->type != semicolonsym)
+		if (tempList->type != semicolonsym)
 		{
 			// missing semi colon error
 		}
-		Token = Token->next;
+		tempList = tempList->next;
 	}
-	if (Token->type = varsym)
+	if (tempList->type = varsym)
 	{
-		Token = Token->next;
+		tempList = tempList->next;
 		
-		if (Token->type != identsym)
+		if (tempList->type != identsym)
 		{
 			// error
 		}
 		
-		Token = Token->next;
+		tempList = tempList->next;
 		
-		while (Token->type == commasym)
+		while (tempList->type == commasym)
 		{
-			Token = Token->next;
+			tempList = tempList->next;
 		
-			if (Token->type != identsym)
+			if (tempList->type != identsym)
 			{
 				// error
 			}
 		
-			Token = Token->next;
+			tempList = tempList->next;
 		}
 		
-		if (Token->type != semicolonsym)
+		if (tempList->type != semicolonsym)
 		{
 			// missing semi colon error
 		}
