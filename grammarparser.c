@@ -210,6 +210,28 @@ void statement(Token *tempList){
 
 }
 
+void factor(Token *tempList){
+	if(tempList->type == identsym){
+		tempList = tempList->next;
+	}
+	else if(tempList->type == numbersym){
+		tempList = tempList->next;
+	}
+	else if(tempList->type == lparentsym){
+		tempList = tempList->next;
+
+		expression(tempList);
+
+		if(tempList->type != rparentsym)
+			error(RIGHTPAREN_MISSING);
+
+		tempList = tempList->next;
+	}
+	else{
+		error(PRECEDING_FACTOR_CANNOT_BEGIN_WITH_SYM);
+	}
+}
+
 int relation (Token *tempList)
 {
 	if (tempList->type == eqsym)
