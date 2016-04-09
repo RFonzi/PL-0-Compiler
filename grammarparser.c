@@ -62,7 +62,7 @@ void block (Token *tempList)
 		}
 		tempList = tempList->next;
 	}
-	if (tempList->type = varsym)
+	if (tempList->type == varsym)
 	{
 		tempList = tempList->next;
 
