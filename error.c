@@ -84,9 +84,10 @@ void error(int code){
             exit();
         case IDENT_MUST_FOLLOW_READ:
             printf("ERROR CODE %d: Identifier expected after 'read'\n", IDENT_MUST_FOLLOW_READ);
-
+            exit();
         case IDENT_MUST_FOLLOW_WRITE:
             printf("ERROR CODE %d: Identifier expected after 'write'\n", IDENT_MUST_FOLLOW_WRITE);
+            exit();
 
 
     }
