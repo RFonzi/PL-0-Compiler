@@ -35,7 +35,7 @@ void block (Token *tempList)
 		{
 			error (NUM_MUST_FOLLOW_EQ); // equals must be followed by number error
 		}
-		
+
 
 		tempList = tempList->next;
 		while (tempList->type == commasym)
@@ -80,7 +80,7 @@ void block (Token *tempList)
 
 			if (tempList->type != identsym)
 			{
-				error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
+				error(IDENT_EXPECTED_IN_VAR); // identifier missing error
 			}
 
 			tempList = tempList->next;
@@ -106,7 +106,7 @@ void block (Token *tempList)
 
 		if (tempList->type != semicolonsym)
 		{
-			error(SEMICOLON_COMMA_MISSING); // missing semi colon error
+			error(INCORRECT_SYM_AFTER_PROC_DECLARATION); // might change this
 		}
 
 		tempList = tempList->next;
@@ -117,7 +117,7 @@ void block (Token *tempList)
 
 		if (tempList->type != semicolonsym)
 		{
-			error(SEMICOLON_COMMA_MISSING); // missing semi colon error
+			error(INCORRECT_SYM_AFTER_STATEMENT_IN_BLOCK); // might change this
 		}
 
 	}
@@ -152,7 +152,8 @@ void statement(Token *tempList){
 	if(tempList->type == identsym){
 		tempList = tempList->next;
 
-		if(tempList->type != becomessym) //EQ instead of becomes??
+		if(tempList->type != becomessym)
+		 	error(BECOMES_MUST_FOLLOW_IDENT_IN_STATEMENT);
 
 		tempList = tempList->next;
 
@@ -177,9 +178,9 @@ void statement(Token *tempList){
 		}
 
 		if(tempList->type != endsym)
-			error(INCORRECT_SYM_FOLLOWING_STATEMENT) //Might need to change this
+			error(INCORRECT_SYM_FOLLOWING_STATEMENT); //Might need to change this
 
-		tempList = tempList->next; //MAY BE THE PERIOD AFTER endsym
+		tempList = tempList->next;
 	}
 	else if(tempList->type == ifsym){
 		tempList = tempList->next;
@@ -190,13 +191,13 @@ void statement(Token *tempList){
 			error(THEN_EXPECTED);
 
 		tempList = tempList->next;
-		
+
 		statement(tempList);
-		
+
 		if (tempList->type == elsesym)
 		{
 			tempList = tempList->next;
-			
+
 			statement (tempList);
 		}
 	}
@@ -215,24 +216,20 @@ void statement(Token *tempList){
 	else if (tempList->type == readsym)
 	{
 		tempList = tempList->next;
-		
+
 		if (tempList->type != identsym)
 			error(IDENT_MUST_FOLLOW_READ);
-		
+
 		tempList = tempList->next;
-		
-		statement(tempList);
 	}
 	else if (tempList->type == writesym)
 	{
 		tempList = tempList->next;
-		
+
 		if (tempList->type != identsym)
 			error(IDENT_MUST_FOLLOW_WRITE);
-		
+
 		tempList = tempList->next;
-		
-		statement(tempList);
 	}
 }
 
