@@ -80,8 +80,14 @@ void error(int code){
             printf("ERROR CODE %d: This number is too large\n", NUM_TOO_LARGE);
             exit();
         case IDENT_EXPECTED_IN_VAR:
-            printf("ERROR CODE %d: Identifier expected after 'var'\n", NUM_TOO_LARGE);
+            printf("ERROR CODE %d: Identifier expected after 'var'\n", IDENT_EXPECTED_IN_VAR);
             exit();
+        case IDENT_MUST_FOLLOW_READ:
+            printf("ERROR CODE %d: Identifier expected after 'read'\n", IDENT_MUST_FOLLOW_READ);
+
+        case IDENT_MUST_FOLLOW_WRITE:
+            printf("ERROR CODE %d: Identifier expected after 'write'\n", IDENT_MUST_FOLLOW_WRITE);
+
 
     }
 }
