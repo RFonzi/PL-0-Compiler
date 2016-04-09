@@ -80,6 +80,7 @@ int scanFile(FILE *fp){
         }
     }
 
+    createToken("null", 1);
     printf("COMPLETE\n");
     return 0;
 
