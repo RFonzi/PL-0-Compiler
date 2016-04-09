@@ -23,13 +23,13 @@ stack.o : stack.c stack.h
 symboltable.o : symboltable.c symboltable.h
 	$(CC) -g -c symboltable.c
 
-grammarparser.o : grammarparser.c tokenlist.h symboltable.h
+grammarparser.o : grammarparser.c scanner.h symboltable.h grammarparser.h error.h
 	$(CC) -g -c grammarparser.c
 
 error.o : error.c error.h
 	$(CC) -g -c error.c
 
-main.o : main.c scanner.h tokenlist.h cpu.h stack.h error.h symboltable.h
+main.o : main.c scanner.h tokenlist.h cpu.h stack.h symboltable.h grammarparser.h error.h
 	$(CC) -g -c main.c
 
 clean :

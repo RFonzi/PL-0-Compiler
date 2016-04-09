@@ -1,8 +1,7 @@
-#include "Tokenlist.h"
+#include "scanner.h"
 #include "symboltable.h"
-
-
-
+#include "grammarparser.h"
+#include "error.h"
 
 void program(Token *tokenlist)
 {
@@ -111,7 +110,7 @@ void block (Token *tempList)
 
 		tempList = tempList->next;
 
-		block(&tempList);
+		block(tempList);
 
 		tempList = tempList->next;
 
@@ -206,7 +205,7 @@ void statement(Token *tempList){
 
 		condition(tempList);
 
-		if(tempList != dosym)
+		if(tempList->type != dosym)
 			error(DO_EXPECTED);
 
 		tempList = tempList->next;
