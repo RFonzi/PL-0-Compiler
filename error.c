@@ -79,5 +79,9 @@ void error(int code){
         case NUM_TOO_LARGE:
             printf("ERROR CODE %d: This number is too large\n", NUM_TOO_LARGE);
             exit();
+        case IDENT_EXPECTED_IN_VAR:
+            printf("ERROR CODE %d: Identifier expected after 'var'\n", NUM_TOO_LARGE);
+            exit();
+
     }
 }
