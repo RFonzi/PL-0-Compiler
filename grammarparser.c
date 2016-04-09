@@ -35,6 +35,7 @@ void block (Token *tempList)
 		{
 			error (NUM_MUST_FOLLOW_EQ); // equals must be followed by number error
 		}
+		
 
 		tempList = tempList->next;
 		while (tempList->type == commasym)
@@ -189,7 +190,7 @@ void statement(Token *tempList){
 			error(THEN_EXPECTED);
 
 		tempList = tempList->next;
-
+		
 		statement(tempList);
 	}
 	else if(tempList->type == whilesym){
@@ -202,6 +203,28 @@ void statement(Token *tempList){
 
 		tempList = tempList->next;
 
+		statement(tempList);
+	}
+	else if (tempList->type == readsym)
+	{
+		tempList = tempList->next;
+		
+		if (tempList->type != identsym)
+			error(IDENT_MUST_FOLLOW_READ);
+		
+		tempList = tempList->next;
+		
+		statement(tempList);
+	}
+	else if (tempList->type == writesym)
+	{
+		tempList = tempList->next;
+		
+		if (tempList->type != identsym)
+			error(IDENT_MUST_FOLLOW_WRITE);
+		
+		tempList = tempList->next;
+		
 		statement(tempList);
 	}
 }
