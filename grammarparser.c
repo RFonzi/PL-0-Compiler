@@ -7,7 +7,7 @@
 void program(Token *tokenlist)
 {
 	Token * tempList = tokenList;
-	block (&tempList);
+	block (tempList);
 
 	if (tempList->type != periodsym)
 	{
@@ -122,7 +122,7 @@ void block (Token *tempList)
 
 	}
 
-	statement (&tempList);
+	statement (tempList);
 }
 
 
@@ -133,18 +133,18 @@ void condition (Token *tempList)
 	if (tempList->type == oddsym)
 	{
 		tempList = tempList->next;
-		expression(&tempList);
+		expression(tempList);
 	}
 	else
 	{
-		expression(&tempList);
-		if (relation(&tempList) == 0)
+		expression(tempList);
+		if (relation(tempList) == 0)
 		{
 			error (RELATIONAL_OP_EXPECTED); // missing relational op error
 		}
 
 		tempList = tempList->next;
-		expression(&tempList);
+		expression(tempList);
 	}
 }
 
@@ -192,6 +192,13 @@ void statement(Token *tempList){
 		tempList = tempList->next;
 		
 		statement(tempList);
+		
+		if (tempList->type == elsesym)
+		{
+			tempList = tempList->next;
+			
+			statement (tempList);
+		}
 	}
 	else if(tempList->type == whilesym){
 		tempList = tempList->next;
@@ -237,24 +244,24 @@ void expression (Token *tempList)
 		tempList = tempList->next;
 	}
 
-	term (&tempList);
+	term (tempList);
 
 	while (tempList->type == plussym || tempList->type == minussym)
 	{
 		tempList = tempList->next;
-		term (&tempList);
+		term (tempList);
 	}
 
 }
 
 void term (Token *tempList)
 {
-	factor (&tempList);
+	factor (tempList);
 
 	while (tempList->type == multsym || tempList->type == slashsym)
 	{
 		tempList = tempList->next;
-		factor (&tempList);
+		factor (tempList);
 	}
 
 }
