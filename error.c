@@ -88,6 +88,9 @@ void error(int code){
         case IDENT_MUST_FOLLOW_WRITE:
             printf("ERROR CODE %d: Identifier expected after 'write'\n", IDENT_MUST_FOLLOW_WRITE);
             exit();
+        case BECOMES_MUST_FOLLOW_IDENT_IN_STATEMENT:
+            printf("ERROR CODE %d: ':=' must follow identifier in statement\n", BECOMES_MUST_FOLLOW_IDENT_IN_STATEMENT);
+            exit();
 
 
     }
