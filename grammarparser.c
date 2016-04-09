@@ -35,8 +35,9 @@ void block (Token *tempList)
 			error (NUM_MUST_FOLLOW_EQ); // equals must be followed by number error
 		}
 
-
+		tempList = tempList->next;	//SKIP NUMBER AFTER NUMBERSYM
 		tempList = tempList->next;
+
 		while (tempList->type == commasym)
 		{
 			tempList = tempList->next;
@@ -54,6 +55,8 @@ void block (Token *tempList)
 			{
 				error (NUM_MUST_FOLLOW_EQ); // equals must be followed by number error
 			}
+
+			tempList = tempList->next;	//SKIP NUMBER AFTER NUMBERSYM
 			tempList = tempList->next;
 		}
 		if (tempList->type != semicolonsym)
@@ -71,6 +74,7 @@ void block (Token *tempList)
 			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
 
+		tempList = tempList->next; //SKIP VAR NAME
 		tempList = tempList->next;
 
 		while (tempList->type == commasym)
@@ -82,6 +86,7 @@ void block (Token *tempList)
 				error(IDENT_EXPECTED_IN_VAR); // identifier missing error
 			}
 
+			tempList = tempList->next; //SKIP VAR NAME
 			tempList = tempList->next;
 		}
 
@@ -268,6 +273,7 @@ void factor(Token *tempList){
 	}
 	else if(tempList->type == numbersym){
 		tempList = tempList->next;
+		tempList = tempList->next;	//SKIP NUMBER AFTER NUMBERSYM
 	}
 	else if(tempList->type == lparentsym){
 		tempList = tempList->next;
