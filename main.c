@@ -11,6 +11,8 @@ int main(int argc, char **argv){
     fclose(clear);
     clear = fopen("lexemelist.txt", "w");
     fclose(clear);
+    clear = fopen("symlist.txt", "w");
+    fclose(clear);
     clear = NULL;
 
 
