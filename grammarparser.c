@@ -210,7 +210,7 @@ void statement(Token **tempList){
 		int i, found = 0;
 		for(i = 0; i < numSymbols; i++){
 			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0){
-				if(symbolTable[i].type != 2){
+				if(symbolTable[i].kind != 2){
 					error(ASSIGNMENT_TO_CONST_OR_PROC);
 				}
 				found = 1;
