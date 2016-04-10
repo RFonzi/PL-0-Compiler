@@ -1,5 +1,6 @@
-Group: Ryan Fonzi & Laura Driscoll
 For McAlpin's COP3402 class, Spring 2016
+Group: Ryan Fonzi & Laura Driscoll
+
 
 Requirements: gcc
 
@@ -43,7 +44,14 @@ Error Codes:
 28: Identifier expected after 'write'
 29: ':=' must follow identifier in statement
 
-WARNING: This program expects PL/0 code as input! Not a lexeme list!
+===========================W A R N I N G===========================
+This program expects PL/0 code as input! Not a lexeme list!
+
+In order for our parser to work properly, we needed to null terminate our
+token list with the nullsym '1'.
+AS A RESULT, 'lexemetable.txt' AND 'lexemelist.txt'ARE NULL TERMINATED
+WITH A '1' AS WELL.
+===================================================================
 
 
 NOTE:
