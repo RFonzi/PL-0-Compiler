@@ -1,9 +1,17 @@
+#include <string.h>
+#include <stdlib.h>
 #include "scanner.h"
 #include "symboltable.h"
 #include "grammarparser.h"
 #include "error.h"
 
 Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
+int tempKind;      // const = 1, var = 2, proc = 3
+char tempName[12]; // name up to 11 chars
+int tempVal;       // number (ASCII value)
+int tempLevel;     // L level
+int tempAddr;      // M address
+
 
 void program(Token *tokenlist)
 {
@@ -21,45 +29,63 @@ void block (Token **tempList)
 {
 	if ((*tempList)->type == constsym)
 	{
+		tempKind = 1; //1 for Const
 		(*tempList) = (*tempList)->next;
+		
 		if ((*tempList)->type != identsym)
 		{
 			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
+
+		strcpy(tempName, (*tempList)->lexeme); //Store name of const
 		(*tempList) = (*tempList)->next;
+
 		if ((*tempList)->type != eqsym)
 		{
 			error (EQ_MUST_FOLLOW_IDENT); // equals must follow identifier error
 		}
+
 		(*tempList) = (*tempList)->next;
+
 		if ((*tempList)->type != numbersym)
 		{
 			error (NUM_MUST_FOLLOW_EQ); // equals must be followed by number error
 		}
 
-		//(*tempList) = (*tempList)->next; 	//SKIP NUMBER AFTER NUMBERSYM
+		tempVal = atoi((*tempList)->lexeme); //Store value of const
 		(*tempList) = (*tempList)->next;
+
+		addConst(tempKind, tempName, tempVal); //Add const to symbol table
 
 		while ((*tempList)->type == commasym)
 		{
+			tempKind = 1; //1 for Const
 			(*tempList) = (*tempList)->next;
+
 			if ((*tempList)->type != identsym)
 			{
 				error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 			}
+
+			strcpy(tempName, (*tempList)->lexeme); //Store name of const
 			(*tempList) = (*tempList)->next;
+
 			if ((*tempList)->type != eqsym)
 			{
 				error (EQ_MUST_FOLLOW_IDENT); // equals must follow identifier error
 			}
+
 			(*tempList) = (*tempList)->next;
+
 			if ((*tempList)->type != numbersym)
 			{
 				error (NUM_MUST_FOLLOW_EQ); // equals must be followed by number error
 			}
 
-			// (*tempList) = (*tempList)->next; 	//SKIP NUMBER AFTER NUMBERSYM
+			tempVal = atoi((*tempList)->lexeme); //Store value of const
 			(*tempList) = (*tempList)->next;
+
+			addConst(tempKind, tempName, tempVal); //Add const to symbol table
 		}
 		if ((*tempList)->type != semicolonsym)
 		{
