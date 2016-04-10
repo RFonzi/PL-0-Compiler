@@ -20,7 +20,6 @@ void program(Token *tokenlist)
 	Token * tempList = tokenList;
 	block (&tempList);
 	
-	//printf("%d \n", (tempList)->type);
 	if (tempList->type != periodsym)
 	{
 		error(PERIOD_EXPECTED); // period missing error
@@ -168,10 +167,7 @@ void block (Token **tempList)
 		tempLevel++;
 		block(tempList);
 		tempLevel--;
-		
-		// printf("%d \n", (*tempList)->type);
-		//(*tempList) = (*tempList)->next;
-		
+				
 
 		if ((*tempList)->type != semicolonsym)
 		{
@@ -196,7 +192,6 @@ void condition (Token **tempList)
 	}
 	else
 	{	
-		//printf("%d \n", (*tempList)->type);
 		expression(tempList);
 		if (relation(tempList) == 0)
 		{
@@ -211,8 +206,6 @@ void condition (Token **tempList)
 void statement(Token **tempList){
 	if((*tempList)->type == identsym){
 		(*tempList) = (*tempList)->next;
-
-		//printf("%d \n", (*tempList)->type); // testing
 
 		if((*tempList)->type != becomessym)
 		 	error(BECOMES_MUST_FOLLOW_IDENT_IN_STATEMENT);
@@ -243,7 +236,7 @@ void statement(Token **tempList){
 
 		if((*tempList)->type != endsym)
 			error(INCORRECT_SYM_FOLLOWING_STATEMENT); //Might need to change this
-		// printf("%d \n", (*tempList)->type);
+
 		(*tempList) = (*tempList)->next;
 		
 		
