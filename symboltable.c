@@ -2,7 +2,6 @@
 #include <string.h>
 
 int numSymbols = 0;
-Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 
 void addConst(int kind, char* name, int val){
     symbolTable[numSymbols].kind = kind;

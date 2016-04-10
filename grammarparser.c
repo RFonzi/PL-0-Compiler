@@ -3,6 +3,8 @@
 #include "grammarparser.h"
 #include "error.h"
 
+Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
+
 void program(Token *tokenlist)
 {
 	Token * tempList = tokenList;
@@ -19,66 +21,66 @@ void block (Token **tempList)
 {
 	if ((*tempList)->type == constsym)
 	{
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 		if ((*tempList)->type != identsym)
 		{
 			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 		if ((*tempList)->type != eqsym)
 		{
 			error (EQ_MUST_FOLLOW_IDENT); // equals must follow identifier error
 		}
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 		if ((*tempList)->type != numbersym)
 		{
 			error (NUM_MUST_FOLLOW_EQ); // equals must be followed by number error
 		}
 
 		//(*tempList) = (*tempList)->next; 	//SKIP NUMBER AFTER NUMBERSYM
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		while ((*tempList)->type == commasym)
 		{
-			(*tempList) = (*tempList)->next; 
+			(*tempList) = (*tempList)->next;
 			if ((*tempList)->type != identsym)
 			{
 				error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 			}
-			(*tempList) = (*tempList)->next; 
+			(*tempList) = (*tempList)->next;
 			if ((*tempList)->type != eqsym)
 			{
 				error (EQ_MUST_FOLLOW_IDENT); // equals must follow identifier error
 			}
-			(*tempList) = (*tempList)->next; 
+			(*tempList) = (*tempList)->next;
 			if ((*tempList)->type != numbersym)
 			{
 				error (NUM_MUST_FOLLOW_EQ); // equals must be followed by number error
 			}
 
 			// (*tempList) = (*tempList)->next; 	//SKIP NUMBER AFTER NUMBERSYM
-			(*tempList) = (*tempList)->next; 
+			(*tempList) = (*tempList)->next;
 		}
 		if ((*tempList)->type != semicolonsym)
 		{
 			error(SEMICOLON_COMMA_MISSING); // missing semi colon error
 		}
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 	}
 	if ((*tempList)->type == varsym)
-	{	
-		(*tempList) = (*tempList)->next; 
+	{
+		(*tempList) = (*tempList)->next;
 		if ((*tempList)->type != identsym)
 		{
 			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
 
 		//(*tempList) = (*tempList)->next;  //SKIP VAR NAME
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		while ((*tempList)->type == commasym)
 		{
-			(*tempList) = (*tempList)->next; 
+			(*tempList) = (*tempList)->next;
 
 			if ((*tempList)->type != identsym)
 			{
@@ -86,37 +88,37 @@ void block (Token **tempList)
 			}
 
 			//(*tempList) = (*tempList)->next;  //SKIP VAR NAME
-			(*tempList) = (*tempList)->next; 
+			(*tempList) = (*tempList)->next;
 		}
-		
+
 		if ((*tempList)->type != semicolonsym)
 		{
 			error(SEMICOLON_COMMA_MISSING); // missing semi colon error
 		}
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 	}
 	while ((*tempList)->type == procsym)
 	{
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		if ((*tempList)->type != identsym)
 		{
 			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		if ((*tempList)->type != semicolonsym)
 		{
 			error(INCORRECT_SYM_AFTER_PROC_DECLARATION); // might change this
 		}
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		block(tempList);
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		if ((*tempList)->type != semicolonsym)
 		{
@@ -131,11 +133,11 @@ void block (Token **tempList)
 
 void condition (Token **tempList)
 {
-	(*tempList) = (*tempList)->next; 
+	(*tempList) = (*tempList)->next;
 
 	if ((*tempList)->type == oddsym)
 	{
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 		expression(tempList);
 	}
 	else
@@ -146,97 +148,97 @@ void condition (Token **tempList)
 			error (RELATIONAL_OP_EXPECTED); // missing relational op error
 		}
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 		expression(tempList);
 	}
 }
 
 void statement(Token **tempList){
 	if((*tempList)->type == identsym){
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		//printf("%d \n", (*tempList)->type); // testing
-		
+
 		if((*tempList)->type != becomessym)
 		 	error(BECOMES_MUST_FOLLOW_IDENT_IN_STATEMENT);
 
-		(*tempList) = (*tempList)->next; 
-				
+		(*tempList) = (*tempList)->next;
+
 		expression(tempList);
 	}
 	else if((*tempList)->type == callsym){
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		if((*tempList)->type != identsym)
 			error(IDENT_MUST_FOLLOW_CALL);
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 	}
 	else if((*tempList)->type == beginsym){
-		
-		
-		(*tempList) = (*tempList)->next; 
-		
+
+
+		(*tempList) = (*tempList)->next;
+
 		statement(tempList);
-				
+
 		while((*tempList)->type == semicolonsym){
-			(*tempList) = (*tempList)->next; 
+			(*tempList) = (*tempList)->next;
 			statement(tempList);
 		}
-		
+
 		if((*tempList)->type != endsym)
 			error(INCORRECT_SYM_FOLLOWING_STATEMENT); //Might need to change this
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 	}
 	else if((*tempList)->type == ifsym){
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		condition(tempList);
 
 		if((*tempList)->type != thensym)
 			error(THEN_EXPECTED);
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		statement(tempList);
 
 		if ((*tempList)->type == elsesym)
 		{
-			(*tempList) = (*tempList)->next; 
+			(*tempList) = (*tempList)->next;
 
 			statement (tempList);
 		}
 	}
 	else if((*tempList)->type == whilesym){
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		condition(tempList);
 
 		if((*tempList)->type != dosym)
 			error(DO_EXPECTED);
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		statement(tempList);
 	}
 	else if ((*tempList)->type == readsym)
 	{
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		if ((*tempList)->type != identsym)
 			error(IDENT_MUST_FOLLOW_READ);
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 	}
 	else if ((*tempList)->type == writesym)
 	{
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		if ((*tempList)->type != identsym)
 			error(IDENT_MUST_FOLLOW_WRITE);
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 	}
 }
 
@@ -245,49 +247,49 @@ void expression (Token **tempList)
 {
 	if ((*tempList)->type == plussym || (*tempList)->type == minussym)
 	{
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 	}
 
 	term (tempList);
-	
+
 	while ((*tempList)->type == plussym || (*tempList)->type == minussym)
 	{
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 		term (tempList);
 	}
 
 }
 
 void term (Token **tempList)
-{		
+{
 	factor (tempList);
-	
+
 	while ((*tempList)->type == multsym || (*tempList)->type == slashsym)
 	{
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 		factor (tempList);
 	}
 
 }
 
 void factor(Token **tempList){
-	
+
 	if((*tempList)->type == identsym){
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 	}
 	else if((*tempList)->type == numbersym){
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 		//(*tempList) = (*tempList)->next; 	//SKIP NUMBER AFTER NUMBERSYM
 	}
 	else if((*tempList)->type == lparentsym){
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 
 		expression(tempList);
 
 		if((*tempList)->type != rparentsym)
 			error(RIGHTPAREN_MISSING);
 
-		(*tempList) = (*tempList)->next; 
+		(*tempList) = (*tempList)->next;
 	}
 	else{
 		error(PRECEDING_FACTOR_CANNOT_BEGIN_WITH_SYM);
