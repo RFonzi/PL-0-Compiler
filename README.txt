@@ -39,12 +39,12 @@ Error Codes:
 24: An expression cannot begin with this symbol
 25: This number is too large
 26: Identifier expected after 'var'
-27: Identifier expected after 'reasymd'
+27: Identifier expected after 'read'
 28: Identifier expected after 'write'
 29: ':=' must follow identifier in statement
 
 WARNING: This program expects PL/0 code as input! Not a lexeme list!
- 
+
 
 NOTE:
 Input file MUST be named 'input.txt', which will contain your PL/0 program
