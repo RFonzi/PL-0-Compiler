@@ -28,15 +28,18 @@ void printSymbolTable(FILE *fp){
 
     int i;
     for(i = 0; i < numSymbols; i++){
-        if(symbolTable[i].kind == 1)
-            char* nameKind = "const";
-        else if(symbolTable[i].kind == 2)
-            char* nameKind = "var";
-        else if(symbolTable[i].kind == 3)
-            char* nameKind = "proc";
+        char nameKind[6];
+        if(symbolTable[i].kind == 1){
+            strcpy(nameKind, "const");
+        }
+        else if(symbolTable[i].kind == 2){
+            strcpy(nameKind, "var");
+        }
+        else if(symbolTable[i].kind == 3){
+            strcpy(nameKind, "proc");
+        }
 
-
-        fprintf(fp, "%-6s%-6s%-6d%-6d", symbolTable[i].name,
+        fprintf(fp, "%-6s%-6s%-6d%-6d\n", symbolTable[i].name,
                                         nameKind,
                                         symbolTable[i].level,
                                         symbolTable[i].addr);

@@ -11,6 +11,7 @@ char tempName[12]; // name up to 11 chars
 int tempVal;       // number (ASCII value)
 int tempLevel = 0; // L level
 int tempAddr = 0;  // M address
+int offset = 4;    // AR offset
 
 
 
@@ -32,7 +33,7 @@ void block (Token **tempList)
 	{
 		tempKind = 1; //1 for Const
 		(*tempList) = (*tempList)->next;
-		
+
 		if ((*tempList)->type != identsym)
 		{
 			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
@@ -97,19 +98,21 @@ void block (Token **tempList)
 	if ((*tempList)->type == varsym)
 	{
 		tempKind = 2; // 2 for var
-		
+
 		(*tempList) = (*tempList)->next;
 		if ((*tempList)->type != identsym)
 		{
 			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
-		
+
 		strcpy(tempName, (*tempList)->lexeme); //Store name of var
-		
+
 		//(*tempList) = (*tempList)->next;  //SKIP VAR NAME
 		(*tempList) = (*tempList)->next;
-		
+
+		tempLevel = offset;
 		addVarOrProc(tempKind, tempName, tempLevel, tempAddr);
+		offset++;
 
 		while ((*tempList)->type == commasym)
 		{
@@ -119,13 +122,15 @@ void block (Token **tempList)
 			{
 				error(IDENT_EXPECTED_IN_VAR); // identifier missing error
 			}
-			
+
 			strcpy(tempName, (*tempList)->lexeme); //Store name of var
 
 			//(*tempList) = (*tempList)->next;  //SKIP VAR NAME
 			(*tempList) = (*tempList)->next;
-			
+
+			tempLevel = offset;
 			addVarOrProc(tempKind, tempName, tempLevel, tempAddr);
+			offset++;
 		}
 
 		if ((*tempList)->type != semicolonsym)
@@ -136,20 +141,20 @@ void block (Token **tempList)
 		(*tempList) = (*tempList)->next;
 	}
 	while ((*tempList)->type == procsym)
-	{	
+	{
 		tempKind = 3; // 3 for Procedure
-		
+
 		(*tempList) = (*tempList)->next;
 
 		if ((*tempList)->type != identsym)
 		{
 			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
-		
+
 		strcpy(tempName, (*tempList)->lexeme); //Store name of Procedure
-		
+
 		(*tempList) = (*tempList)->next;
-		
+
 		addVarOrProc(tempKind, tempName, tempLevel, tempAddr);
 
 		if ((*tempList)->type != semicolonsym)
@@ -158,11 +163,11 @@ void block (Token **tempList)
 		}
 
 		(*tempList) = (*tempList)->next;
-		
+
 		tempLevel++;
 		block(tempList);
 		tempLevel--;
-		
+
 		(*tempList) = (*tempList)->next;
 
 		if ((*tempList)->type != semicolonsym)

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "scanner.h"
 #include "grammarparser.h"
+#include "symboltable.h"
 
 int main(int argc, char **argv){
     //Clear out existing files...
@@ -41,4 +42,6 @@ int main(int argc, char **argv){
     //Parsing grammar
     program(tokenList);
     printf("Done! No errors!\n");
+
+    printSymbolTable(fp);
 }
