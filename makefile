@@ -33,4 +33,4 @@ main.o : main.c scanner.h grammarparser.h symboltable.h
 	$(CC) -Wall -g -c main.c
 
 clean :
-	del $(PROG) $(OBJS)
+	rm $(PROG) $(OBJS)
