@@ -182,7 +182,6 @@ void block (Token **tempList)
 
 void condition (Token **tempList)
 {
-	(*tempList) = (*tempList)->next;
 
 	if ((*tempList)->type == oddsym)
 	{
@@ -190,7 +189,8 @@ void condition (Token **tempList)
 		expression(tempList);
 	}
 	else
-	{
+	{	
+		printf("%d \n", (*tempList)->type);
 		expression(tempList);
 		if (relation(tempList) == 0)
 		{
