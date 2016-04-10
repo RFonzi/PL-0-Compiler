@@ -12,12 +12,22 @@ void addConst(int kind, char* name, int val){
     numSymbols++;
 }
 
-void addVarOrProc(int kind, char* name, int level, int addr){
+void addProc(int kind, char* name, int level, int addr){
     symbolTable[numSymbols].kind = kind;
     strcpy(symbolTable[numSymbols].name, name);
     symbolTable[numSymbols].level = level;
     symbolTable[numSymbols].addr = addr;
 
+    numSymbols++;
+}
+
+void addVar(int kind, char*name, int val, int level, int addr){
+	symbolTable[numSymbols].kind = kind;
+    strcpy(symbolTable[numSymbols].name, name);
+    symbolTable[numSymbols].level = level;
+    symbolTable[numSymbols].addr = addr;
+	symbolTable[numSymbols].val = val;
+	
     numSymbols++;
 }
 
@@ -42,7 +52,7 @@ void printSymbolTable(FILE *fp){
         fprintf(fp, "%-6s%-6s%-6d%-6d\n", symbolTable[i].name,
                                         nameKind,
                                         symbolTable[i].level,
-                                        symbolTable[i].addr);
+                                        symbolTable[i].val);
     }
 
     fclose(fp);

@@ -110,8 +110,8 @@ void block (Token **tempList)
 		//(*tempList) = (*tempList)->next;  //SKIP VAR NAME
 		(*tempList) = (*tempList)->next;
 
-		tempLevel = offset;
-		addVarOrProc(tempKind, tempName, tempLevel, tempAddr);
+		
+		addVar(tempKind, tempName, offset, tempLevel, tempAddr);
 		offset++;
 
 		while ((*tempList)->type == commasym)
@@ -128,8 +128,7 @@ void block (Token **tempList)
 			//(*tempList) = (*tempList)->next;  //SKIP VAR NAME
 			(*tempList) = (*tempList)->next;
 
-			tempLevel = offset;
-			addVarOrProc(tempKind, tempName, tempLevel, tempAddr);
+			addVar(tempKind, tempName, offset, tempLevel, tempAddr);
 			offset++;
 		}
 
@@ -155,7 +154,7 @@ void block (Token **tempList)
 
 		(*tempList) = (*tempList)->next;
 
-		addVarOrProc(tempKind, tempName, tempLevel, tempAddr);
+		addProc(tempKind, tempName, tempLevel, tempAddr);
 
 		if ((*tempList)->type != semicolonsym)
 		{

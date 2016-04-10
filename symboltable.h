@@ -17,7 +17,8 @@ extern int numSymbols;
 extern Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 
 void addConst(int kind, char* name, int val);
-void addVarOrProc(int kind, char* name, int level, int addr);
+void addProc(int kind, char* name, int level, int addr);
+void addVar(int kind, char*name, int val, int level, int addr);
 void printSymbolTable(FILE *fp);
 
 #endif //SYMBOL_TABLE
