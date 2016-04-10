@@ -56,7 +56,7 @@ void block (Token **tempList)
 				error (NUM_MUST_FOLLOW_EQ); // equals must be followed by number error
 			}
 
-			(*tempList) = (*tempList)->next; 	//SKIP NUMBER AFTER NUMBERSYM
+			// (*tempList) = (*tempList)->next; 	//SKIP NUMBER AFTER NUMBERSYM
 			(*tempList) = (*tempList)->next; 
 		}
 		if ((*tempList)->type != semicolonsym)
@@ -155,15 +155,13 @@ void statement(Token **tempList){
 	if((*tempList)->type == identsym){
 		(*tempList) = (*tempList)->next; 
 
-		printf("%d \n", (*tempList)->type); // testing
+		//printf("%d \n", (*tempList)->type); // testing
 		
 		if((*tempList)->type != becomessym)
 		 	error(BECOMES_MUST_FOLLOW_IDENT_IN_STATEMENT);
 
 		(*tempList) = (*tempList)->next; 
-		
-		printf("%d \n", (*tempList)->type); // testing
-		
+				
 		expression(tempList);
 	}
 	else if((*tempList)->type == callsym){
@@ -176,23 +174,16 @@ void statement(Token **tempList){
 	}
 	else if((*tempList)->type == beginsym){
 		
-		printf("%d \n", (*tempList)->type); // testing
 		
 		(*tempList) = (*tempList)->next; 
-
-		printf("%d \n", (*tempList)->type); // testing
 		
 		statement(tempList);
-		
-		printf("%d \n", (*tempList)->type); // testing
-		
+				
 		while((*tempList)->type == semicolonsym){
 			(*tempList) = (*tempList)->next; 
 			statement(tempList);
 		}
 		
-		printf("%d \n", (*tempList)->type); // testing
-
 		if((*tempList)->type != endsym)
 			error(INCORRECT_SYM_FOLLOWING_STATEMENT); //Might need to change this
 
@@ -259,8 +250,6 @@ void expression (Token **tempList)
 
 	term (tempList);
 	
-	printf("%d \n", (*tempList)->type); // testing
-
 	while ((*tempList)->type == plussym || (*tempList)->type == minussym)
 	{
 		(*tempList) = (*tempList)->next; 
@@ -270,13 +259,9 @@ void expression (Token **tempList)
 }
 
 void term (Token **tempList)
-{	
-	printf("%d \n", (*tempList)->type); // testing
-	
+{		
 	factor (tempList);
 	
-	printf("%d \n", (*tempList)->type); // testing
-
 	while ((*tempList)->type == multsym || (*tempList)->type == slashsym)
 	{
 		(*tempList) = (*tempList)->next; 
@@ -286,11 +271,9 @@ void term (Token **tempList)
 }
 
 void factor(Token **tempList){
-	printf("%d \n", (*tempList)->type); // testing
 	
 	if((*tempList)->type == identsym){
 		(*tempList) = (*tempList)->next; 
-		printf("%d \n", (*tempList)->type); // testing
 	}
 	else if((*tempList)->type == numbersym){
 		(*tempList) = (*tempList)->next; 
