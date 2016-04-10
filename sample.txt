@@ -1,0 +1,28 @@
+Sample Input:
+
+var x, y;
+
+begin    
+
+x := y + 56;
+
+end.
+
+
+
+Sample Output:
+
+"Cleaning input...COMPLETE
+ Reading in tokens...COMPLETE
+ Generating the lex table...COMPLETE
+ Generating lex list...COMPLETE
+ Done! No errors"
+
+
+
+
+Sample symlist.txt:
+
+Name        Type        Level       Value       
+x           var         0           4          
+y           var         0           5   
