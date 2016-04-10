@@ -19,7 +19,7 @@ void program(Token *tokenlist)
 {
 	Token * tempList = tokenList;
 	block (&tempList);
-	
+
 	if (tempList->type != periodsym)
 	{
 		error(PERIOD_EXPECTED); // period missing error
@@ -29,7 +29,7 @@ void program(Token *tokenlist)
 
 void block (Token **tempList)
 {
-	int offset = 4;    // AR offset 
+	int offset = 4;    // AR offset
 	if ((*tempList)->type == constsym)
 	{
 		tempKind = 1; //1 for Const
@@ -111,7 +111,7 @@ void block (Token **tempList)
 		//(*tempList) = (*tempList)->next;  //SKIP VAR NAME
 		(*tempList) = (*tempList)->next;
 
-		
+
 		addVar(tempKind, tempName, offset, tempLevel, tempAddr);
 		offset++;
 
@@ -167,13 +167,13 @@ void block (Token **tempList)
 		tempLevel++;
 		block(tempList);
 		tempLevel--;
-				
+
 
 		if ((*tempList)->type != semicolonsym)
 		{
 			error(INCORRECT_SYM_AFTER_STATEMENT_IN_BLOCK); // might change this
 		}
-		
+
 		(*tempList) = (*tempList)->next;
 
 	}
@@ -191,7 +191,7 @@ void condition (Token **tempList)
 		expression(tempList);
 	}
 	else
-	{	
+	{
 		expression(tempList);
 		if (relation(tempList) == 0)
 		{
@@ -205,6 +205,22 @@ void condition (Token **tempList)
 
 void statement(Token **tempList){
 	if((*tempList)->type == identsym){
+
+		//Check to see if the identifier is actually a var
+		int i, found = 0;
+		for(i = 0; i < numSymbols; i++){
+			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0){
+				if(symbolTable[i].type != 2){
+					error(ASSIGNMENT_TO_CONST_OR_PROC);
+				}
+				found = 1;
+			}
+		}
+
+		//If the identifier isn't declared yet, throw this
+		if(found == 0)
+			error(UNDECLARED_IDENTIFIER);
+
 		(*tempList) = (*tempList)->next;
 
 		if((*tempList)->type != becomessym)
@@ -238,9 +254,9 @@ void statement(Token **tempList){
 			error(INCORRECT_SYM_FOLLOWING_STATEMENT); //Might need to change this
 
 		(*tempList) = (*tempList)->next;
-		
-		
-		
+
+
+
 	}
 	else if((*tempList)->type == ifsym){
 		(*tempList) = (*tempList)->next;
