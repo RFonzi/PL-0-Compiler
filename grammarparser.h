@@ -1,7 +1,7 @@
 #ifndef GRAMMAR_PARSER
 #define GRAMMAR_PARSER
 
-extern int offset;        // AR offset
+//extern int offset;        // AR offset
 extern int tempKind;      // const = 1, var = 2, proc = 3
 extern char tempName[12]; // name up to 11 chars
 extern int tempVal;       // number (ASCII value)

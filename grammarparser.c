@@ -11,7 +11,7 @@ char tempName[12]; // name up to 11 chars
 int tempVal;       // number (ASCII value)
 int tempLevel = 0; // L level
 int tempAddr = 0;  // M address
-int offset = 4;    // AR offset
+
 
 
 
@@ -19,7 +19,8 @@ void program(Token *tokenlist)
 {
 	Token * tempList = tokenList;
 	block (&tempList);
-
+	
+	//printf("%d \n", (tempList)->type);
 	if (tempList->type != periodsym)
 	{
 		error(PERIOD_EXPECTED); // period missing error
@@ -29,6 +30,7 @@ void program(Token *tokenlist)
 
 void block (Token **tempList)
 {
+	int offset = 4;    // AR offset 
 	if ((*tempList)->type == constsym)
 	{
 		tempKind = 1; //1 for Const
@@ -166,13 +168,17 @@ void block (Token **tempList)
 		tempLevel++;
 		block(tempList);
 		tempLevel--;
-
-		(*tempList) = (*tempList)->next;
+		
+		// printf("%d \n", (*tempList)->type);
+		//(*tempList) = (*tempList)->next;
+		
 
 		if ((*tempList)->type != semicolonsym)
 		{
 			error(INCORRECT_SYM_AFTER_STATEMENT_IN_BLOCK); // might change this
 		}
+		
+		(*tempList) = (*tempList)->next;
 
 	}
 
@@ -190,7 +196,7 @@ void condition (Token **tempList)
 	}
 	else
 	{	
-		printf("%d \n", (*tempList)->type);
+		//printf("%d \n", (*tempList)->type);
 		expression(tempList);
 		if (relation(tempList) == 0)
 		{
@@ -237,8 +243,11 @@ void statement(Token **tempList){
 
 		if((*tempList)->type != endsym)
 			error(INCORRECT_SYM_FOLLOWING_STATEMENT); //Might need to change this
-
+		// printf("%d \n", (*tempList)->type);
 		(*tempList) = (*tempList)->next;
+		
+		
+		
 	}
 	else if((*tempList)->type == ifsym){
 		(*tempList) = (*tempList)->next;
