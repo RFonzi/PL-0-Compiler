@@ -1,6 +1,8 @@
 #ifndef SYMBOL_TABLE
 #define SYMBOL_TABLE
 
+#include <stdio.h>
+
 #define MAX_SYMBOL_TABLE_SIZE 100
 
 typedef struct symbol{
@@ -16,5 +18,6 @@ extern Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 
 void addConst(int kind, char* name, int val);
 void addVarOrProc(int kind, char* name, int level, int addr);
+void printSymbolTable(FILE *fp);
 
 #endif //SYMBOL_TABLE
