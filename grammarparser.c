@@ -9,8 +9,9 @@ Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 int tempKind;      // const = 1, var = 2, proc = 3
 char tempName[12]; // name up to 11 chars
 int tempVal;       // number (ASCII value)
-int tempLevel;     // L level
-int tempAddr;      // M address
+int tempLevel = 0; // L level
+int tempAddr = 0;  // M address
+
 
 
 void program(Token *tokenlist)
@@ -95,14 +96,20 @@ void block (Token **tempList)
 	}
 	if ((*tempList)->type == varsym)
 	{
+		tempKind = 2; // 2 for var
+		
 		(*tempList) = (*tempList)->next;
 		if ((*tempList)->type != identsym)
 		{
 			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
-
+		
+		strcpy(tempName, (*tempList)->lexeme); //Store name of var
+		
 		//(*tempList) = (*tempList)->next;  //SKIP VAR NAME
 		(*tempList) = (*tempList)->next;
+		
+		addVarOrProc(tempKind, tempName, tempLevel, tempAddr);
 
 		while ((*tempList)->type == commasym)
 		{
@@ -112,9 +119,13 @@ void block (Token **tempList)
 			{
 				error(IDENT_EXPECTED_IN_VAR); // identifier missing error
 			}
+			
+			strcpy(tempName, (*tempList)->lexeme); //Store name of var
 
 			//(*tempList) = (*tempList)->next;  //SKIP VAR NAME
 			(*tempList) = (*tempList)->next;
+			
+			addVarOrProc(tempKind, tempName, tempLevel, tempAddr);
 		}
 
 		if ((*tempList)->type != semicolonsym)
@@ -125,15 +136,21 @@ void block (Token **tempList)
 		(*tempList) = (*tempList)->next;
 	}
 	while ((*tempList)->type == procsym)
-	{
+	{	
+		tempKind = 3; // 3 for Procedure
+		
 		(*tempList) = (*tempList)->next;
 
 		if ((*tempList)->type != identsym)
 		{
 			error(IDENT_MUST_FOLLOW_CONST_VAR_PROC); // identifier missing error
 		}
-
+		
+		strcpy(tempName, (*tempList)->lexeme); //Store name of Procedure
+		
 		(*tempList) = (*tempList)->next;
+		
+		addVarOrProc(tempKind, tempName, tempLevel, tempAddr);
 
 		if ((*tempList)->type != semicolonsym)
 		{
@@ -141,9 +158,11 @@ void block (Token **tempList)
 		}
 
 		(*tempList) = (*tempList)->next;
-
+		
+		tempLevel++;
 		block(tempList);
-
+		tempLevel--;
+		
 		(*tempList) = (*tempList)->next;
 
 		if ((*tempList)->type != semicolonsym)
