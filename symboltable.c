@@ -27,14 +27,14 @@ void addVar(int kind, char*name, int val, int level, int addr){
     symbolTable[numSymbols].level = level;
     symbolTable[numSymbols].addr = addr;
 	symbolTable[numSymbols].val = val;
-	
+
     numSymbols++;
 }
 
 void printSymbolTable(FILE *fp){
     fp = fopen("symlist.txt", "w");
 
-    fprintf(fp, "Name  Type  Level Value\n");
+    fprintf(fp, "Name        Type        Level       Value       \n");
 
     int i;
     for(i = 0; i < numSymbols; i++){
@@ -49,7 +49,7 @@ void printSymbolTable(FILE *fp){
             strcpy(nameKind, "proc");
         }
 
-        fprintf(fp, "%-6s%-6s%-6d%-6d\n", symbolTable[i].name,
+        fprintf(fp, "%-11s %-11s %-11d %-11d\n", symbolTable[i].name,
                                         nameKind,
                                         symbolTable[i].level,
                                         symbolTable[i].val);
