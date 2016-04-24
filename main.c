@@ -42,10 +42,12 @@ int main(int argc, char **argv){
     genLexList(fp);
     fprintf(fp, "\n");
     fclose(fp);
-
+	
+	//Outputting header for file
+	prepareSymbolTable(fp);
     //Parsing grammar
     program(tokenList);
     printf("Done! No errors!\n");
 
-    printSymbolTable(fp);
+    
 }

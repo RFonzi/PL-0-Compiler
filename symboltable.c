@@ -4,10 +4,14 @@
 
 int numSymbols = 0;
 
+FILE*fp;
+
 void addConst(int kind, char* name, int val){
     symbolTable[numSymbols].kind = kind;
     strcpy(symbolTable[numSymbols].name, name);
     symbolTable[numSymbols].val = val;
+	
+	printSymbol(fp);
 
     numSymbols++;
 }
@@ -17,6 +21,8 @@ void addProc(int kind, char* name, int level, int addr){
     strcpy(symbolTable[numSymbols].name, name);
     symbolTable[numSymbols].level = level;
     symbolTable[numSymbols].addr = addr;
+	
+	printSymbol(fp);
 
     numSymbols++;
 }
@@ -27,6 +33,8 @@ void addVar(int kind, char*name, int val, int level, int addr){
     symbolTable[numSymbols].level = level;
     symbolTable[numSymbols].addr = addr;
 	symbolTable[numSymbols].val = val;
+	
+	printSymbol(fp);
 
     numSymbols++;
 }
@@ -43,20 +51,20 @@ void printSymbol(FILE *fp)
 	fp = fopen("symlist.txt", "a");
 	
 	char nameKind[6];
-    if(symbolTable[numSymbols-1].kind == 1){
+    if(symbolTable[numSymbols].kind == 1){
         strcpy(nameKind, "const");
 	}
-    else if(symbolTable[numSymbols-1].kind == 2){
+    else if(symbolTable[numSymbols].kind == 2){
         strcpy(nameKind, "var");
     }
-    else if(symbolTable[numSymbols-1].kind == 3){
+    else if(symbolTable[numSymbols].kind == 3){
         strcpy(nameKind, "proc");
     }
 
-    fprintf(fp, "%-11s %-11s %-11d %-11d\n", symbolTable[numSymbols-1].name,
+    fprintf(fp, "%-11s %-11s %-11d %-11d\n", symbolTable[numSymbols].name,
                                         nameKind,
-                                        symbolTable[numSymbols-1].level,
-                                        symbolTable[numSymbols-1].val);
+                                        symbolTable[numSymbols].level,
+                                        symbolTable[numSymbols].val);
 	
 	fclose(fp);
 }
