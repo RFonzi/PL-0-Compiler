@@ -7,6 +7,7 @@ extern char tempName[12]; // name up to 11 chars
 extern int tempVal;       // number (ASCII value)
 extern int tempLevel;     // L level
 extern int tempAddr;      // M address
+extern int codeCounter;
 
 void program(Token *tokenlist);
 void block (Token **tempList);

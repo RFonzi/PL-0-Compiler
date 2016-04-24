@@ -11,8 +11,7 @@ char tempName[12]; // name up to 11 chars
 int tempVal;       // number (ASCII value)
 int tempLevel = 0; // L level
 int tempAddr = 0;  // M address
-
-FILE* mcode;
+int codeCounter = 0; // Global code counter
 
 
 
@@ -385,10 +384,9 @@ int relation (Token **tempList)
 }
 
 void gen(int opr, int l, int m){
-	mcode = fopen("mcode.txt", "a");
+	code[codeCounter]->op = opr;
+	code[codeCounter]->l = l;
+	code[codeCounter]->m = m;
 
-	fprintf(mcode, "%d %d %d\n", opr, l, m);
-
-	fclose(mcode);
-	free(mcode);
+	codeCounter++;
 }
