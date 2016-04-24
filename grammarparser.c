@@ -195,7 +195,8 @@ void condition (Token **tempList)
 {
 
 	if ((*tempList)->type == oddsym)
-	{
+	{	
+		gen (OPR, 0, ODD);
 		(*tempList) = (*tempList)->next;
 		expression(tempList);
 	}
@@ -341,6 +342,14 @@ void expression (Token **tempList)
 {
 	if ((*tempList)->type == plussym || (*tempList)->type == minussym)
 	{
+		if ((*tempList)->type == plussym)
+		{
+			gen(OPR, 0, ADD);
+		}
+		else if ((*tempList)->type == minussym)
+		{
+			gen(OPR, 0, SUB);
+		}
 		(*tempList) = (*tempList)->next;
 	}
 
@@ -388,6 +397,7 @@ void factor(Token **tempList){
 		(*tempList) = (*tempList)->next;
 	}
 	else if((*tempList)->type == numbersym){
+		gen(LIT, 0, atoi ((*tempList)->lexeme));
 		(*tempList) = (*tempList)->next;
 		//(*tempList) = (*tempList)->next; 	//SKIP NUMBER AFTER NUMBERSYM
 	}
