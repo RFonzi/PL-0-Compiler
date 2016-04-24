@@ -21,6 +21,7 @@ int lexi; // Current Lexicographical level
 extern const char *opcodeNames[]; // List of opcode names
 extern const char *oprcodeNames[]; // List of oprcode names
 extern int arArray[MAX_STACK_SIZE / 5]; // Array to keep track of when activation records start.
+instruction code[MAX_CODE_LENGTH]; // Code store
 int ar;
 
 enum OPCODES{
@@ -55,7 +56,6 @@ enum RTYPE{
 };
 
 
-instruction code[MAX_CODE_LENGTH]; // Code store
 
 // Stores all code from "mcode.txt" and puts it into the code store
 void storeCode();
