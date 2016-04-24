@@ -348,6 +348,14 @@ void expression (Token **tempList)
 
 	while ((*tempList)->type == plussym || (*tempList)->type == minussym)
 	{
+		if ((*tempList)->type == plussym)
+		{
+			gen(OPR, 0, ADD);
+		}
+		else if ((*tempList)->type == minussym)
+		{
+			gen(OPR, 0, SUB);
+		}
 		(*tempList) = (*tempList)->next;
 		term (tempList);
 	}
@@ -359,7 +367,15 @@ void term (Token **tempList)
 	factor (tempList);
 
 	while ((*tempList)->type == multsym || (*tempList)->type == slashsym)
-	{
+	{	
+		if ((*tempList)->type == multsym)
+		{
+			gen(OPR, 0, MUL);
+		}
+		else if ((*tempList)->type == slashsym)
+		{
+			gen(OPR, 0, DIV);
+		}
 		(*tempList) = (*tempList)->next;
 		factor (tempList);
 	}
@@ -393,17 +409,35 @@ void factor(Token **tempList){
 int relation (Token **tempList)
 {
 	if ((*tempList)->type == eqsym)
+	{	
+		gen (OPR, 0, EQL);
 		return 1;
+	}
 	if ((*tempList)->type == neqsym)
+	{
+		gen (OPR, 0, NEQ);
 		return 1;
+	}
 	if ((*tempList)->type == lessym)
+	{
+		gen (OPR, 0, LSS);
 		return 1;
+	}
 	if ((*tempList)->type == leqsym)
+	{	
+		gen (OPR, 0, LEQ);
 		return 1;
+	}
 	if ((*tempList)->type == gtrsym)
+	{	
+		gen (OPR, 0, GTR);
 		return 1;
+	}
 	if ((*tempList)->type == geqsym)
+	{
+		gen (OPR, 0, GEQ);
 		return 1;
+	}
 
 	return 0;
 }
