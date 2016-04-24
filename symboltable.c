@@ -57,3 +57,27 @@ void printSymbolTable(FILE *fp){
 
     fclose(fp);
 }
+
+void deleteTopSymbolLevel(){
+    int i, maxSize = 0;
+
+    // Find out what the max level is
+    for(i = 0; i < MAX_SYMBOL_TABLE_SIZE; i++){
+        if(symbolTable[i].level > maxSize){
+            maxSize = symbolTable[i].level;
+        }
+    }
+
+    // Remove it
+    for(i = 0; i < MAX_SYMBOL_TABLE_SIZE; i++){
+        if(symbolTable[i].level == maxSize){
+            symbolTable[i].kind = 0;
+            symbolTable[i].name = {0};
+            symbolTable[i].val = 0;
+            symbolTable[i].level = 0;
+            symbolTable[i].addr = 0;
+
+            numSymbols--;
+        }
+    }
+}

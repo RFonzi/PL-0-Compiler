@@ -20,5 +20,6 @@ void addConst(int kind, char* name, int val);
 void addProc(int kind, char* name, int level, int addr);
 void addVar(int kind, char*name, int val, int level, int addr);
 void printSymbolTable(FILE *fp);
+void deleteSymbolLevel(int l);
 
 #endif //SYMBOL_TABLE
