@@ -31,6 +31,36 @@ void addVar(int kind, char*name, int val, int level, int addr){
     numSymbols++;
 }
 
+void prepareSymbolTable (FILE *fp)
+{
+	fp = fopen ("symlist.txt", "w");
+	fprintf(fp, "Name        Type        Level       Value       \n");
+	fclose(fp);
+}
+
+void printSymbol(FILE *fp)
+{
+	fp = fopen("symlist.txt", "a");
+	
+	char nameKind[6];
+    if(symbolTable[numSymbols-1].kind == 1){
+        strcpy(nameKind, "const");
+	}
+    else if(symbolTable[numSymbols-1].kind == 2){
+        strcpy(nameKind, "var");
+    }
+    else if(symbolTable[numSymbols-1].kind == 3){
+        strcpy(nameKind, "proc");
+    }
+
+    fprintf(fp, "%-11s %-11s %-11d %-11d\n", symbolTable[numSymbols-1].name,
+                                        nameKind,
+                                        symbolTable[numSymbols-1].level,
+                                        symbolTable[numSymbols-1].val);
+	
+	fclose(fp);
+}
+
 void printSymbolTable(FILE *fp){
     fp = fopen("symlist.txt", "w");
 
