@@ -185,7 +185,7 @@ void block (Token **tempList)
 
 	statement (tempList);
 
-	gen(OPR, 0, 0);
+	//gen(OPR, 0, 0); // Return
 }
 
 
@@ -243,6 +243,22 @@ void statement(Token **tempList){
 
 		if((*tempList)->type != identsym)
 			error(IDENT_MUST_FOLLOW_CALL);
+
+		int i, found = 0;
+		for(i = 0; i < numSymbols; i++){
+			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 &&
+						symbolTable[i].level == tempLevel){
+				if(symbolTable[i].kind != 1){
+					error(UNDECLARED_IDENTIFIER);
+				}
+				found = 1;
+			}
+		}
+
+		if(found == 0)
+			error(UNDECLARED_IDENTIFIER);
+
+		gen(CAL, symbolTable[i].level, symbolTable.addr);
 
 		(*tempList) = (*tempList)->next;
 	}
