@@ -17,4 +17,6 @@ void term (Token **tempList);
 void factor(Token **tempList);
 int relation (Token **tempList);
 
+void gen(int opr, int l, int m);
+
 #endif //GRAMMAR_PARSER

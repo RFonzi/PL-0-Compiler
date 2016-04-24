@@ -12,6 +12,8 @@ int tempVal;       // number (ASCII value)
 int tempLevel = 0; // L level
 int tempAddr = 0;  // M address
 
+FILE* mcode;
+
 
 
 
@@ -380,4 +382,13 @@ int relation (Token **tempList)
 		return 1;
 
 	return 0;
+}
+
+void gen(int opr, int l, int m){
+	mcode = fopen("mcode.txt", "a");
+
+	fprintf(mcode, "%d %d %d\n", opr, l, m);
+
+	fclose(mcode);
+	free(mcode);
 }
