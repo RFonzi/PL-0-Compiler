@@ -31,6 +31,8 @@ void program(Token *tokenlist)
 void block (Token **tempList)
 {
 	int offset = 4;    // AR offset
+	int jumpAddr = codeCounter;
+	gen(JMP, 0, 0) // M is placeholder
 	if ((*tempList)->type == constsym)
 	{
 		tempKind = 1; //1 for Const
@@ -178,8 +180,12 @@ void block (Token **tempList)
 		(*tempList) = (*tempList)->next;
 
 	}
+	code[jumpAddr]->m = jumpAddr;
+	gen(INC, 0, offset);
 
 	statement (tempList);
+
+	gen(OPR, 0, 0);
 }
 
 
