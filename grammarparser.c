@@ -9,7 +9,7 @@ Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 int tempKind;      // const = 1, var = 2, proc = 3
 char tempName[12]; // name up to 11 chars
 int tempVal;       // number (ASCII value)
-int tempLevel = 0; // L level
+int tempLevel = -1; // L level
 int tempAddr = 0;  // M address
 int codeCounter = 0; // Global code counter
 
@@ -30,6 +30,7 @@ void program(Token *tokenlist)
 
 void block (Token **tempList)
 {
+	tempLevel++;
 	int offset = 4;    // AR offset
 	int jumpAddr = codeCounter;
 	gen(JMP, 0, 0); // M is placeholder
@@ -167,9 +168,9 @@ void block (Token **tempList)
 
 		(*tempList) = (*tempList)->next;
 
-		tempLevel++;
+
 		block(tempList);
-		tempLevel--;
+
 
 
 		if ((*tempList)->type != semicolonsym)
@@ -185,7 +186,8 @@ void block (Token **tempList)
 
 	statement (tempList);
 
-	//gen(OPR, 0, 0); // Return
+	//gen(OPR, 0, 0); //Return
+	tempLevel--;
 }
 
 
