@@ -159,7 +159,7 @@ void block (Token **tempList)
 
 		(*tempList) = (*tempList)->next;
 
-		addProc(tempKind, tempName, tempLevel, tempAddr);
+		addProc(tempKind, tempName, tempLevel, jumpAddr);
 
 		if ((*tempList)->type != semicolonsym)
 		{
@@ -246,11 +246,12 @@ void statement(Token **tempList){
 		if((*tempList)->type != identsym)
 			error(IDENT_MUST_FOLLOW_CALL);
 
+		//Check to see if the identifier is actually a proc
 		int i, found = 0;
 		for(i = 0; i < numSymbols; i++){
 			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 &&
 						symbolTable[i].level == tempLevel){
-				if(symbolTable[i].kind != 1){
+				if(symbolTable[i].kind != 3){
 					error(UNDECLARED_IDENTIFIER);
 				}
 				found = 1;
