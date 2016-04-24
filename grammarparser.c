@@ -26,6 +26,7 @@ void program(Token *tokenlist)
 		error(PERIOD_EXPECTED); // period missing error
 	}
 
+	gen(SIO3, 0, 3); // Halt
 }
 
 void block (Token **tempList)
@@ -186,8 +187,11 @@ void block (Token **tempList)
 
 	statement (tempList);
 
-	//gen(OPR, 0, 0); //Return
+	if(tempLevel != 0)
+		gen(OPR, 0, 0); //Return
+
 	tempLevel--;
+	deleteTopSymbolLevel();
 }
 
 
@@ -217,7 +221,7 @@ void statement(Token **tempList){
 	if((*tempList)->type == identsym){
 
 		//Check to see if the identifier is actually a var
-		int i, found = 0;
+		int i, found = 0, location;
 		for(i = 0; i < numSymbols; i++){
 			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 &&
 						symbolTable[i].level == tempLevel){
@@ -225,6 +229,7 @@ void statement(Token **tempList){
 					error(ASSIGNMENT_TO_CONST_OR_PROC);
 				}
 				found = 1;
+				location = i;
 			}
 		}
 
@@ -240,6 +245,9 @@ void statement(Token **tempList){
 		(*tempList) = (*tempList)->next;
 
 		expression(tempList);
+
+		gen(STO, symbolTable[location].level, symbolTable[location].value);
+
 	}
 	else if((*tempList)->type == callsym){
 		(*tempList) = (*tempList)->next;
@@ -248,7 +256,7 @@ void statement(Token **tempList){
 			error(IDENT_MUST_FOLLOW_CALL);
 
 		//Check to see if the identifier is actually a proc
-		int i, found = 0;
+		int i, found = 0, location;
 		for(i = 0; i < numSymbols; i++){
 			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 &&
 						symbolTable[i].level == tempLevel){
@@ -256,13 +264,14 @@ void statement(Token **tempList){
 					error(UNDECLARED_IDENTIFIER);
 				}
 				found = 1;
+				location = i;
 			}
 		}
 
 		if(found == 0)
 			error(UNDECLARED_IDENTIFIER);
 
-		gen(CAL, symbolTable[i].level, symbolTable.addr);
+		gen(CAL, symbolTable[location].level, symbolTable.addr);
 
 		(*tempList) = (*tempList)->next;
 	}
@@ -394,6 +403,21 @@ void term (Token **tempList)
 void factor(Token **tempList){
 
 	if((*tempList)->type == identsym){
+
+		int i, found = 0, location;
+		for(i = numSymbols; i >= 0; i++){
+			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0){
+				found = 1;
+				location = i;
+				break;
+			}
+		}
+
+		if(found == 0)
+			error(UNDECLARED_IDENTIFIER);
+
+		gen(LOD, symbolTable[location].level, symbolTable[location].value);
+
 		(*tempList) = (*tempList)->next;
 	}
 	else if((*tempList)->type == numbersym){
