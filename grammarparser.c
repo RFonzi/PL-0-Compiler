@@ -32,7 +32,7 @@ void block (Token **tempList)
 {
 	int offset = 4;    // AR offset
 	int jumpAddr = codeCounter;
-	gen(JMP, 0, 0) // M is placeholder
+	gen(JMP, 0, 0); // M is placeholder
 	if ((*tempList)->type == constsym)
 	{
 		tempKind = 1; //1 for Const
