@@ -252,8 +252,7 @@ void statement(Token **tempList){
 		//Check to see if the identifier is actually a var
 		int i, found = 0, location;
 		for(i = numSymbols; i >= 0; i--){
-			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 &&
-						symbolTable[i].level == tempLevel){
+			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 ){
 				if(symbolTable[i].kind != 2){
 					error(ASSIGNMENT_TO_CONST_OR_PROC);
 				}
@@ -288,8 +287,7 @@ void statement(Token **tempList){
 		//Check to see if the identifier is actually a proc
 		int i, found = 0, location;
 		for(i = 0; i < numSymbols; i++){
-			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 &&
-						symbolTable[i].level == tempLevel){
+			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0){
 				if(symbolTable[i].kind != 3){
 					error(UNDECLARED_IDENTIFIER);
 				}
