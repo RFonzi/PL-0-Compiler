@@ -405,7 +405,7 @@ void statement(Token **tempList){
 			}
 		}
 
-		gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].addr)
+		gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].addr);
 
 		(*tempList) = (*tempList)->next;
 	}
