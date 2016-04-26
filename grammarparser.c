@@ -326,12 +326,13 @@ void statement(Token **tempList){
 	else if((*tempList)->type == ifsym){
 		(*tempList) = (*tempList)->next;
 
-		int jumpFromThen = codeCounter;
-		int jumpFromElse;
-
-		gen(JPC, 0, 0); // Jump from if, M is placeholder
 
 		condition(tempList);
+		
+		int jumpFromThen = codeCounter;
+		int jumpFromElse;
+		
+		gen(JPC, 0, 0); // Jump from if, M is placeholder
 
 		if((*tempList)->type != thensym)
 			error(THEN_EXPECTED);
