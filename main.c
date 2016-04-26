@@ -47,6 +47,11 @@ int main(int argc, char **argv){
 	prepareSymbolTable(fp);
     //Parsing grammar
     program(tokenList);
+
+    fp = fopen("mcode.txt", "w");
+    outputCode(fp);
+    fclose(fp);
+
     printf("Done! No errors!\n");
 
     

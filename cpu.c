@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "grammarparser.h"
 #include "cpu.h"
 #include "stack.h"
 
@@ -173,4 +174,12 @@ int base(int l, int base)
         l--;
     }
     return b1;
+}
+
+void outputCode(FILE* fp){
+    int i;
+    for(i = 0; i < codeCounter; i++){
+        fprintf(fp, "%d %d %d\n", code[i].op, code[i].l, code[i].m);
+    }
+    
 }
