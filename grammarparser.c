@@ -211,13 +211,37 @@ void condition (Token **tempList)
 	else
 	{
 		expression(tempList);
-		if (relation(tempList) == 0)
+
+		int relationalOP = relation(tempList)
+		if (relationalOP == 0)
 		{
 			error (RELATIONAL_OP_EXPECTED); // missing relational op error
 		}
 
 		(*tempList) = (*tempList)->next;
 		expression(tempList);
+
+		// Determine what op was used and gen accordingly
+		switch(relationalOP){
+			case 1:
+				gen (OPR, 0, EQL);
+				break;
+			case 2:
+				gen (OPR, 0, NEQ);
+				break;
+			case 3:
+				gen (OPR, 0, LSS);
+				break;
+			case 4:
+				gen (OPR, 0, LEQ);
+				break;
+			case 5:
+				gen (OPR, 0, GTR);
+				break;
+			case 6:
+				gen (OPR, 0, GEQ);
+				break;
+		}
 	}
 }
 
@@ -301,6 +325,10 @@ void statement(Token **tempList){
 	}
 	else if((*tempList)->type == ifsym){
 		(*tempList) = (*tempList)->next;
+
+		int jumpFrom = codeCounter;
+
+		gen(JPC, 0, 0) // M is placeholder
 
 		condition(tempList);
 
@@ -461,7 +489,7 @@ void factor(Token **tempList){
 
 		if(isSignNeg)
 			gen(OPR, 0, NEG);
-		
+
 		(*tempList) = (*tempList)->next;
 		//(*tempList) = (*tempList)->next; 	//SKIP NUMBER AFTER NUMBERSYM
 	}
@@ -508,33 +536,27 @@ int relation (Token **tempList)
 {
 	if ((*tempList)->type == eqsym)
 	{	
-		gen (OPR, 0, EQL);
 		return 1;
 	}
 	if ((*tempList)->type == neqsym)
 	{
-		gen (OPR, 0, NEQ);
-		return 1;
+		return 2;
 	}
 	if ((*tempList)->type == lessym)
 	{
-		gen (OPR, 0, LSS);
-		return 1;
+		return 3;
 	}
 	if ((*tempList)->type == leqsym)
 	{	
-		gen (OPR, 0, LEQ);
-		return 1;
+		return 4;
 	}
 	if ((*tempList)->type == gtrsym)
 	{	
-		gen (OPR, 0, GTR);
-		return 1;
+		return 5;
 	}
 	if ((*tempList)->type == geqsym)
 	{
-		gen (OPR, 0, GEQ);
-		return 1;
+		return 6;
 	}
 
 	return 0;
