@@ -1,7 +1,7 @@
 #ifndef CPU_H
 #define CPU_H
 
-#include <stdio.c>
+#include <stdio.h>
 #include "stack.h"
 
 #define MAX_CODE_LENGTH 500

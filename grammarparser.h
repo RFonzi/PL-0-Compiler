@@ -1,6 +1,8 @@
 #ifndef GRAMMAR_PARSER
 #define GRAMMAR_PARSER
 
+#include "tokenlist.h"
+
 //extern int offset;        // AR offset
 extern int tempKind;      // const = 1, var = 2, proc = 3
 extern char tempName[12]; // name up to 11 chars
@@ -10,7 +12,7 @@ extern int tempAddr;      // M address
 extern int codeCounter;
 
 extern char opstack[500]; // Operator stack for converting infix to postfix
-extern int numOps // Number of operators in the operator stack
+extern int numOps; // Number of operators in the operator stack
 
 void program(Token *tokenlist);
 void block (Token **tempList);

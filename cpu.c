@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "grammarparser.h"
 #include "cpu.h"
 #include "stack.h"
+#include "grammarparser.h"
 
 const char *opcodeNames[] = {"   ", "lit", "opr", "lod", "sto", "cal", "inc", "jmp", "jpc", "sio", "sio", "sio"};
 const char *oprcodeNames[] = {"ret", "neg", "add", "sub", "mul", "div", "odd", "mod", "eql", "neq", "lss", "leq", "gtr", "geq"};

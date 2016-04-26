@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "scanner.h"
 #include "symboltable.h"
+#include "tokenlist.h"
 #include "grammarparser.h"
 #include "error.h"
 #include "cpu.h"
