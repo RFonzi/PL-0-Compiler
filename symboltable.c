@@ -110,7 +110,7 @@ void deleteTopSymbolLevel(){
     for(i = 0; i < MAX_SYMBOL_TABLE_SIZE; i++){
         if(symbolTable[i].level == maxSize){
             symbolTable[i].kind = 0;
-            symbolTable[i].name = {0};
+            symbolTable[i].name[0] = 0;
             symbolTable[i].val = 0;
             symbolTable[i].level = 0;
             symbolTable[i].addr = 0;

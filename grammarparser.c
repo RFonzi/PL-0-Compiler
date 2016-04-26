@@ -16,7 +16,7 @@ int tempAddr = 0;  // M address
 int codeCounter = 0; // Global code counter
 
 char opstack[500] = {0}; // Operator stack for converting infix to postfix
-int numOps // Number of operators in the operator stack
+int numOps; // Number of operators in the operator stack
 
 
 
@@ -187,7 +187,7 @@ void block (Token **tempList)
 		(*tempList) = (*tempList)->next;
 
 	}
-	code[jumpAddr]->m = jumpAddr;
+	code[jumpAddr].m = jumpAddr;
 	gen(INC, 0, offset);
 
 	statement (tempList);
@@ -213,7 +213,7 @@ void condition (Token **tempList)
 	{
 		expression(tempList);
 
-		int relationalOP = relation(tempList)
+		int relationalOP = relation(tempList);
 		if (relationalOP == 0)
 		{
 			error (RELATIONAL_OP_EXPECTED); // missing relational op error
@@ -276,7 +276,7 @@ void statement(Token **tempList){
 
 		expression(tempList);
 
-		gen(STO, tempLevel - symbolTable[location].level, symbolTable[location].value);
+		gen(STO, tempLevel - symbolTable[location].level, symbolTable[location].val);
 
 	}
 	else if((*tempList)->type == callsym){
@@ -301,7 +301,7 @@ void statement(Token **tempList){
 		if(found == 0)
 			error(UNDECLARED_IDENTIFIER);
 
-		gen(CAL, symbolTable[location].level, symbolTable.val);
+		gen(CAL, symbolTable[location].level, symbolTable[location].val);
 
 		(*tempList) = (*tempList)->next;
 	}
@@ -331,7 +331,7 @@ void statement(Token **tempList){
 		int jumpFromThen = codeCounter;
 		int jumpFromElse;
 
-		gen(JPC, 0, 0) // Jump from if, M is placeholder
+		gen(JPC, 0, 0); // Jump from if, M is placeholder
 
 		condition(tempList);
 
@@ -467,7 +467,7 @@ void expression (Token **tempList)
 			if(opstack[numOps] == '-')
 				gen(OPR, 0, SUB);
 			if(opstack[numOps] == '*')
-				gen(OPR, 0, MULT);
+				gen(OPR, 0, MUL);
 			if(opstack[numOps] == '/')
 				gen(OPR, 0, DIV);
 
@@ -526,7 +526,7 @@ void factor(Token **tempList){
 		// Check if the ident is actually a var
 		int i, found = 0, location;
 		for(i = numSymbols; i >= 0; i--){
-			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 {
+			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 ){
 				if(symbolTable[i].kind == 3){
 					error(ASSIGNMENT_TO_CONST_OR_PROC); // not the right error potentially
 				}
@@ -579,7 +579,7 @@ void factor(Token **tempList){
 			if(opstack[numOps] == '-')
 				gen(OPR, 0, SUB);
 			if(opstack[numOps] == '*')
-				gen(OPR, 0, MULT);
+				gen(OPR, 0, MUL);
 			if(opstack[numOps] == '/')
 				gen(OPR, 0, DIV);
 
@@ -629,9 +629,9 @@ int relation (Token **tempList)
 }
 
 void gen(int opr, int l, int m){
-	code[codeCounter]->op = opr;
-	code[codeCounter]->l = l;
-	code[codeCounter]->m = m;
+	code[codeCounter].op = opr;
+	code[codeCounter].l = l;
+	code[codeCounter].m = m;
 
 	codeCounter++;
 }

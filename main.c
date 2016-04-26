@@ -2,6 +2,7 @@
 #include "scanner.h"
 #include "grammarparser.h"
 #include "symboltable.h"
+#include "cpu.h"
 
 int main(int argc, char **argv){
     //Clear out existing files...

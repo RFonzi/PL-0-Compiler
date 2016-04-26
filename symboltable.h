@@ -22,6 +22,6 @@ void addVar(int kind, char*name, int val, int level, int addr);
 void prepareSymbolTable (FILE *fp);
 void printSymbol(FILE *fp);
 void printSymbolTable(FILE *fp);
-void deleteSymbolLevel(int l);
+void deleteTopSymbolLevel();
 
 #endif //SYMBOL_TABLE
