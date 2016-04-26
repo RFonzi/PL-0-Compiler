@@ -23,18 +23,18 @@ void storeCode(){
         exit(1);
     }
 
-    int codeCounter = 0;
+    int codeCount = 0;
     while(!feof(ifp)){
-        if(codeCounter >= MAX_CODE_LENGTH){
+        if(codeCount >= MAX_CODE_LENGTH){
             printf("Max code length reached. Cannot continue.\n");
             exit(1);
         }
 
-        if(fscanf(ifp, "%d %d %d", &code[codeCounter].op, &code[codeCounter].l, &code[codeCounter].m) != 3){
+        if(fscanf(ifp, "%d %d %d", &code[codeCount].op, &code[codeCount].l, &code[codeCount].m) != 3){
             printf("End of code detected. Continuing...\n");
         }
 
-        codeCounter++;
+        codeCount++;
     }
 
     fclose(ifp);
