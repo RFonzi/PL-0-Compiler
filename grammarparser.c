@@ -392,6 +392,21 @@ void statement(Token **tempList){
 		if ((*tempList)->type != identsym)
 			error(IDENT_MUST_FOLLOW_WRITE);
 
+		// Check if the ident is actually a var
+		int i, found = 0, location;
+		for(i = numSymbols; i >= 0; i--){
+			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 &&
+						symbolTable[i].level == tempLevel){
+				if(symbolTable[i].kind != 2){
+					error(ASSIGNMENT_TO_CONST_OR_PROC);
+				}
+				found = 1;
+				location = i;
+			}
+		}
+
+		gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].addr)
+
 		(*tempList) = (*tempList)->next;
 	}
 }
