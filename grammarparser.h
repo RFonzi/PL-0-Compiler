@@ -9,6 +9,9 @@ extern int tempLevel;     // L level
 extern int tempAddr;      // M address
 extern int codeCounter;
 
+extern char opstack[200]; // Operator stack for converting infix to postfix
+extern int numOps // Number of operators in the operator stack
+
 void program(Token *tokenlist);
 void block (Token **tempList);
 void condition (Token **tempList);

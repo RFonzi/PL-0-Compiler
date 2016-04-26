@@ -23,7 +23,7 @@ stack.o : stack.c stack.h
 symboltable.o : symboltable.c symboltable.h
 	$(CC) -Wall -g -c symboltable.c
 
-grammarparser.o : grammarparser.c scanner.h symboltable.h grammarparser.h error.h
+grammarparser.o : grammarparser.c scanner.h symboltable.h grammarparser.h error.h cpu.h
 	$(CC) -Wall -g -c grammarparser.c
 
 error.o : error.c error.h

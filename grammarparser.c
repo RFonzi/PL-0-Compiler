@@ -4,6 +4,7 @@
 #include "symboltable.h"
 #include "grammarparser.h"
 #include "error.h"
+#include "cpu.h"
 
 Symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 int tempKind;      // const = 1, var = 2, proc = 3
@@ -12,6 +13,9 @@ int tempVal;       // number (ASCII value)
 int tempLevel = -1; // L level
 int tempAddr = 0;  // M address
 int codeCounter = 0; // Global code counter
+
+extern char opstack[200] = {0}; // Operator stack for converting infix to postfix
+extern int numOps // Number of operators in the operator stack
 
 
 
@@ -349,34 +353,41 @@ void statement(Token **tempList){
 
 void expression (Token **tempList)
 {
-	if ((*tempList)->type == plussym || (*tempList)->type == minussym)
-	{
-		if ((*tempList)->type == plussym)
-		{
-			gen(OPR, 0, ADD);
-		}
-		else if ((*tempList)->type == minussym)
-		{
-			gen(OPR, 0, SUB);
-		}
-		(*tempList) = (*tempList)->next;
-	}
-
+	// Convert expression to infix notation
 	term (tempList);
 
 	while ((*tempList)->type == plussym || (*tempList)->type == minussym)
 	{
 		if ((*tempList)->type == plussym)
 		{
-			gen(OPR, 0, ADD);
+			// Push plus to the opstack
+			opstack[numOps] = '+';
+			numOps++;
 		}
 		else if ((*tempList)->type == minussym)
 		{
-			gen(OPR, 0, SUB);
+			// Push minus to the opstack
+			opstack[numOps] = '-';
+			numOps++;
 		}
 		(*tempList) = (*tempList)->next;
 		term (tempList);
 	}
+
+	//Pop the rest of the ops
+	while(numOps >= 0){
+			if(opstack[numOps] == '+')
+				gen(OPR, 0, ADD);
+			if(opstack[numOps] == '-')
+				gen(OPR, 0, SUB);
+			if(opstack[numOps] == '*')
+				gen(OPR, 0, MULT);
+			if(opstack[numOps] == '/')
+				gen(OPR, 0, DIV);
+
+			opstack[numOps] = 0;
+			numOps--;
+		}
 
 }
 
@@ -388,11 +399,15 @@ void term (Token **tempList)
 	{	
 		if ((*tempList)->type == multsym)
 		{
-			gen(OPR, 0, MUL);
+			// Push mult to the opstack
+			opstack[numOps] = '*';
+			numOps++;
 		}
 		else if ((*tempList)->type == slashsym)
 		{
-			gen(OPR, 0, DIV);
+			// Push div to the opstack
+			opstack[numOps] = '/';
+			numOps++;
 		}
 		(*tempList) = (*tempList)->next;
 		factor (tempList);
@@ -401,6 +416,24 @@ void term (Token **tempList)
 }
 
 void factor(Token **tempList){
+
+	int isSignNeg = 0;
+
+	// Check for sign
+	if ((*tempList)->type == plussym || (*tempList)->type == minussym)
+	{
+		if ((*tempList)->type == plussym)
+		{
+			// Sign is positive
+			isSignNeg = 0;
+		}
+		else if ((*tempList)->type == minussym)
+		{
+			// Sign is negative
+			isSignNeg = 1;
+		}
+		(*tempList) = (*tempList)->next;
+	}
 
 	if((*tempList)->type == identsym){
 
@@ -418,20 +451,51 @@ void factor(Token **tempList){
 
 		gen(LOD, symbolTable[location].level, symbolTable[location].value);
 
+		if(isSignNeg)
+			gen(OPR, 0, NEG);
+
 		(*tempList) = (*tempList)->next;
 	}
 	else if((*tempList)->type == numbersym){
 		gen(LIT, 0, atoi ((*tempList)->lexeme));
+
+		if(isSignNeg)
+			gen(OPR, 0, NEG);
+		
 		(*tempList) = (*tempList)->next;
 		//(*tempList) = (*tempList)->next; 	//SKIP NUMBER AFTER NUMBERSYM
 	}
 	else if((*tempList)->type == lparentsym){
+
+		// Push lparen to the opstack
+		opstack[numOps] = '(';
+		numOps++;
+
 		(*tempList) = (*tempList)->next;
 
 		expression(tempList);
 
 		if((*tempList)->type != rparentsym)
 			error(RIGHTPAREN_MISSING);
+
+		// Pop every op from the opstack until a lparen is found
+		while(opstack[numOps] != '('){
+			if(opstack[numOps] == '+')
+				gen(OPR, 0, ADD);
+			if(opstack[numOps] == '-')
+				gen(OPR, 0, SUB);
+			if(opstack[numOps] == '*')
+				gen(OPR, 0, MULT);
+			if(opstack[numOps] == '/')
+				gen(OPR, 0, DIV);
+
+			opstack[numOps] = 0;
+			numOps--;
+		}
+
+		// Pop the lparen
+		opstack[numOps] = 0;
+		numOps--;
 
 		(*tempList) = (*tempList)->next;
 	}
