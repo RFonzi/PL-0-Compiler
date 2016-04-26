@@ -130,7 +130,7 @@ int main(int argc, char **argv){
 
 
     fclose(fp);
-}
+
 
     printf("Done! No errors!\n");
 

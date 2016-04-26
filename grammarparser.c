@@ -401,6 +401,7 @@ void statement(Token **tempList){
 		}
 		
 		gen(STO, tempLevel - symbolTable[location].level, symbolTable[location].val);
+		gen(SIO2, 0, 2);
 
 		(*tempList) = (*tempList)->next;
 	}
@@ -429,6 +430,8 @@ void statement(Token **tempList){
 		}
 
 		gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].val);
+		gen(SIO1, 0, 1);
+	
 
 		(*tempList) = (*tempList)->next;
 	}
