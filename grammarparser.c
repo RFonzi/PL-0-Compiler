@@ -401,8 +401,9 @@ void statement(Token **tempList){
 			error(UNDECLARED_IDENTIFIER);
 		}
 		
-		gen(STO, tempLevel - symbolTable[location].level, symbolTable[location].val);
+		
 		gen(SIO2, 0, 2);
+		gen(STO, tempLevel - symbolTable[location].level, symbolTable[location].val);
 
 		(*tempList) = (*tempList)->next;
 	}
