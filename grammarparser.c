@@ -357,7 +357,14 @@ void statement(Token **tempList){
 	else if((*tempList)->type == whilesym){
 		(*tempList) = (*tempList)->next;
 
+		int conditionLine = codeCounter;
+		int jumpLine;
+
 		condition(tempList);
+
+		jumpLine = codeCounter;
+
+		gen(JPC, 0, 0); // Jump after conditional if it's false, M is placeholder
 
 		if((*tempList)->type != dosym)
 			error(DO_EXPECTED);
@@ -365,6 +372,9 @@ void statement(Token **tempList){
 		(*tempList) = (*tempList)->next;
 
 		statement(tempList);
+
+		gen(JMP, 0, conditionLine); // Jump back up to recheck the conditional
+		code[jumpLine].m = codeCounter; // If the conditional is false, jump after this
 	}
 	else if ((*tempList)->type == readsym)
 	{
