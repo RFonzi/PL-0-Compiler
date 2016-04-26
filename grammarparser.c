@@ -68,7 +68,9 @@ void block (Token **tempList)
 		(*tempList) = (*tempList)->next;
 
 		addConst(tempKind, tempName, tempVal); //Add const to symbol table
-
+		
+		gen (STO, tempLevel, );
+		
 		while ((*tempList)->type == commasym)
 		{
 			tempKind = 1; //1 for Const
@@ -300,7 +302,7 @@ void statement(Token **tempList){
 		if(found == 0)
 			error(UNDECLARED_IDENTIFIER);
 
-		gen(CAL, symbolTable[location].level, symbolTable.addr);
+		gen(CAL, symbolTable[location].level, symbolTable.val);
 
 		(*tempList) = (*tempList)->next;
 	}
@@ -401,7 +403,7 @@ void statement(Token **tempList){
 			error(UNDECLARED_IDENTIFIER);
 		}
 		
-		gen(STO, tempLevel - symbolTable[location].level, symbolTable[location].addr);
+		gen(STO, tempLevel - symbolTable[location].level, symbolTable[location].val);
 
 		(*tempList) = (*tempList)->next;
 	}
@@ -429,7 +431,7 @@ void statement(Token **tempList){
 			error(UNDECLARED_IDENTIFIER);
 		}
 
-		gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].addr);
+		gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].val);
 
 		(*tempList) = (*tempList)->next;
 	}
@@ -525,10 +527,9 @@ void factor(Token **tempList){
 		// Check if the ident is actually a var
 		int i, found = 0, location;
 		for(i = numSymbols; i >= 0; i--){
-			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 &&
-						symbolTable[i].level == tempLevel){
-				if(symbolTable[i].kind != 2){
-					error(ASSIGNMENT_TO_CONST_OR_PROC);
+			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 {
+				if(symbolTable[i].kind == 3){
+					error(ASSIGNMENT_TO_CONST_OR_PROC); // not the right error potentially
 				}
 				found = 1;
 				location = i;
@@ -538,9 +539,13 @@ void factor(Token **tempList){
 
 		if(found == 0)
 			error(UNDECLARED_IDENTIFIER);
-
-		gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].addr);
-
+		
+		if (symbolTable[location].kind == 2)
+			gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].val);
+		
+		if (symbolTable[location].kind == 1)
+			gen(LIT, 0, symbolTable[location].val);
+		
 		if(isSignNeg)
 			gen(OPR, 0, NEG);
 
