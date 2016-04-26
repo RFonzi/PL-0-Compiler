@@ -326,9 +326,10 @@ void statement(Token **tempList){
 	else if((*tempList)->type == ifsym){
 		(*tempList) = (*tempList)->next;
 
-		int jumpFrom = codeCounter;
+		int jumpFromThen = codeCounter;
+		int jumpFromElse;
 
-		gen(JPC, 0, 0) // M is placeholder
+		gen(JPC, 0, 0) // Jump from if, M is placeholder
 
 		condition(tempList);
 
@@ -339,12 +340,19 @@ void statement(Token **tempList){
 
 		statement(tempList);
 
+		jumpFromElse = codeCounter;
+		gen(JMP, 0, 0); //Jump from else, M is placeholder
+
+		code[jumpFromThen].m = codeCounter; //Set jpc to jump at this point if the conditional fails
+
 		if ((*tempList)->type == elsesym)
 		{
 			(*tempList) = (*tempList)->next;
 
 			statement (tempList);
 		}
+
+		code[jumpFromElse].m = codeCounter;
 	}
 	else if((*tempList)->type == whilesym){
 		(*tempList) = (*tempList)->next;
