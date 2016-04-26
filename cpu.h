@@ -1,6 +1,7 @@
 #ifndef CPU_H
 #define CPU_H
 
+#include <stdio.c>
 #include "stack.h"
 
 #define MAX_CODE_LENGTH 500
@@ -71,5 +72,7 @@ void execute();
 //         base - The base to start going down from (bp)
 // Outputs: Index of the AR you travelled down to
 int base(int l, int base);
+
+void outputCode(FILE* fp);
 
 #endif // CPU_H

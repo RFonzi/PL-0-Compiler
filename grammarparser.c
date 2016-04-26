@@ -14,8 +14,8 @@ int tempLevel = -1; // L level
 int tempAddr = 0;  // M address
 int codeCounter = 0; // Global code counter
 
-extern char opstack[200] = {0}; // Operator stack for converting infix to postfix
-extern int numOps // Number of operators in the operator stack
+char opstack[500] = {0}; // Operator stack for converting infix to postfix
+int numOps // Number of operators in the operator stack
 
 
 

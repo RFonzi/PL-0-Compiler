@@ -14,7 +14,7 @@ scanner.o : scanner.c scanner.h tokenlist.h
 tokenlist.o : tokenlist.c tokenlist.h
 	$(CC) -Wall -g -c tokenlist.c
 
-cpu.o : cpu.c cpu.h stack.h
+cpu.o : cpu.c cpu.h stack.h grammarparser.h
 	$(CC) -Wall -g -c cpu.c
 
 stack.o : stack.c stack.h
