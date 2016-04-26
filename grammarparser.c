@@ -250,7 +250,7 @@ void statement(Token **tempList){
 
 		//Check to see if the identifier is actually a var
 		int i, found = 0, location;
-		for(i = 0; i < numSymbols; i++){
+		for(i = numSymbols; i >= 0; i--){
 			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 &&
 						symbolTable[i].level == tempLevel){
 				if(symbolTable[i].kind != 2){
@@ -258,6 +258,7 @@ void statement(Token **tempList){
 				}
 				found = 1;
 				location = i;
+				break;
 			}
 		}
 
@@ -274,7 +275,7 @@ void statement(Token **tempList){
 
 		expression(tempList);
 
-		gen(STO, symbolTable[location].level, symbolTable[location].value);
+		gen(STO, tempLevel - symbolTable[location].level, symbolTable[location].value);
 
 	}
 	else if((*tempList)->type == callsym){
@@ -405,6 +406,10 @@ void statement(Token **tempList){
 			}
 		}
 
+		if(found == 0){
+			error(UNDECLARED_IDENTIFIER);
+		}
+
 		gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].addr);
 
 		(*tempList) = (*tempList)->next;
@@ -498,9 +503,14 @@ void factor(Token **tempList){
 
 	if((*tempList)->type == identsym){
 
+		// Check if the ident is actually a var
 		int i, found = 0, location;
-		for(i = numSymbols; i >= 0; i++){
-			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0){
+		for(i = numSymbols; i >= 0; i--){
+			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 &&
+						symbolTable[i].level == tempLevel){
+				if(symbolTable[i].kind != 2){
+					error(ASSIGNMENT_TO_CONST_OR_PROC);
+				}
 				found = 1;
 				location = i;
 				break;
@@ -510,7 +520,7 @@ void factor(Token **tempList){
 		if(found == 0)
 			error(UNDECLARED_IDENTIFIER);
 
-		gen(LOD, symbolTable[location].level, symbolTable[location].value);
+		gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].addr);
 
 		if(isSignNeg)
 			gen(OPR, 0, NEG);
