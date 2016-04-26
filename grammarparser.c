@@ -69,8 +69,6 @@ void block (Token **tempList)
 
 		addConst(tempKind, tempName, tempVal); //Add const to symbol table
 		
-		gen (STO, tempLevel, );
-		
 		while ((*tempList)->type == commasym)
 		{
 			tempKind = 1; //1 for Const
