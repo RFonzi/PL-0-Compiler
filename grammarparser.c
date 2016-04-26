@@ -16,7 +16,7 @@ int tempAddr = 0;  // M address
 int codeCounter = 0; // Global code counter
 
 char opstack[500] = {0}; // Operator stack for converting infix to postfix
-int numOps; // Number of operators in the operator stack
+int numOps = 0; // Number of operators in the operator stack
 
 
 
@@ -451,21 +451,22 @@ void expression (Token **tempList)
 			// Push plus to the opstack
 			opstack[numOps] = '+';
 			numOps++;
-			printf("Found a plus!\n");
 		}
 		else if ((*tempList)->type == minussym)
 		{
 			// Push minus to the opstack
 			opstack[numOps] = '-';
 			numOps++;
-			printf("Found a minus!\n");
 		}
 		(*tempList) = (*tempList)->next;
 		term (tempList);
 	}
 
 	//Pop the rest of the ops
-	while(numOps >= 0){
+	//printf("# of ops this round is %d\n", numOps);
+	while(numOps > 0){
+			numOps--;
+
 			if(opstack[numOps] == '+')
 				gen(OPR, 0, ADD);
 			if(opstack[numOps] == '-')
@@ -476,7 +477,6 @@ void expression (Token **tempList)
 				gen(OPR, 0, DIV);
 
 			opstack[numOps] = 0;
-			numOps--;
 		}
 
 }
