@@ -165,7 +165,7 @@ void block (Token **tempList)
 
 		(*tempList) = (*tempList)->next;
 
-		addProc(tempKind, tempName, tempLevel, jumpAddr);
+		addProc(tempKind, tempName, tempLevel, codeCounter);
 
 		if ((*tempList)->type != semicolonsym)
 		{
@@ -299,7 +299,7 @@ void statement(Token **tempList){
 		if(found == 0)
 			error(UNDECLARED_IDENTIFIER);
 
-		gen(CAL, symbolTable[location].level, symbolTable[location].val);
+		gen(CAL, tempLevel - symbolTable[location].level, symbolTable[location].val);
 
 		(*tempList) = (*tempList)->next;
 	}

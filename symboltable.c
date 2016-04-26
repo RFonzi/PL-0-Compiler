@@ -16,11 +16,11 @@ void addConst(int kind, char* name, int val){
     numSymbols++;
 }
 
-void addProc(int kind, char* name, int level, int addr){
+void addProc(int kind, char* name, int level, int val){
     symbolTable[numSymbols].kind = kind;
     strcpy(symbolTable[numSymbols].name, name);
     symbolTable[numSymbols].level = level;
-    symbolTable[numSymbols].addr = addr;
+    symbolTable[numSymbols].val = val;
 	
 	printSymbol(fp);
 
