@@ -187,7 +187,7 @@ void block (Token **tempList)
 		(*tempList) = (*tempList)->next;
 
 	}
-	code[jumpAddr].m = jumpAddr;
+	code[jumpAddr].m = codeCounter;
 	gen(INC, 0, offset);
 
 	statement (tempList);
@@ -450,12 +450,14 @@ void expression (Token **tempList)
 			// Push plus to the opstack
 			opstack[numOps] = '+';
 			numOps++;
+			printf("Found a plus!\n");
 		}
 		else if ((*tempList)->type == minussym)
 		{
 			// Push minus to the opstack
 			opstack[numOps] = '-';
 			numOps++;
+			printf("Found a minus!\n");
 		}
 		(*tempList) = (*tempList)->next;
 		term (tempList);
