@@ -29,7 +29,7 @@ grammarparser.o : grammarparser.c scanner.h symboltable.h grammarparser.h error.
 error.o : error.c error.h
 	$(CC) -Wall -g -c error.c
 
-main.o : main.c scanner.h grammarparser.h symboltable.h
+main.o : main.c scanner.h grammarparser.h symboltable.h cpu.h
 	$(CC) -Wall -g -c main.c
 
 clean :
