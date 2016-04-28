@@ -447,6 +447,25 @@ void expression (Token **tempList)
 
 	while ((*tempList)->type == plussym || (*tempList)->type == minussym)
 	{
+
+		// If a lower precidence op is about to enter the opstack, check for higher precident ops and push them
+		if(numOps > 0){
+			while(opstack[numOps - 1] == '*' || opstack[numOps - 1] == '/'){
+				numOps--;
+
+				if(opstack[numOps] == '*')
+					gen(OPR, 0, MUL);
+				if(opstack[numOps] == '/')
+					gen(OPR, 0, DIV);
+
+				opstack[numOps] = 0;
+
+				// Quick and dirty check for array bounds
+				if(numOps == 0)
+					break;
+			}
+		}
+		
 		if ((*tempList)->type == plussym)
 		{
 			// Push plus to the opstack
@@ -466,19 +485,20 @@ void expression (Token **tempList)
 	//Pop the rest of the ops
 	//printf("# of ops this round is %d\n", numOps);
 	while(numOps > 0){
-			numOps--;
+		numOps--;
+	
+		if(opstack[numOps] == '*')
+			gen(OPR, 0, MUL);
+		if(opstack[numOps] == '/')
+			gen(OPR, 0, DIV);
+		if(opstack[numOps] == '+')
+			gen(OPR, 0, ADD);
+		if(opstack[numOps] == '-')
+			gen(OPR, 0, SUB);
 
-			if(opstack[numOps] == '+')
-				gen(OPR, 0, ADD);
-			if(opstack[numOps] == '-')
-				gen(OPR, 0, SUB);
-			if(opstack[numOps] == '*')
-				gen(OPR, 0, MUL);
-			if(opstack[numOps] == '/')
-				gen(OPR, 0, DIV);
 
-			opstack[numOps] = 0;
-		}
+		opstack[numOps] = 0;
+	}
 
 }
 
@@ -513,6 +533,7 @@ void factor(Token **tempList){
 	// Check for sign
 	if ((*tempList)->type == plussym || (*tempList)->type == minussym)
 	{
+
 		if ((*tempList)->type == plussym)
 		{
 			// Sign is positive
@@ -579,22 +600,24 @@ void factor(Token **tempList){
 
 		// Pop every op from the opstack until a lparen is found
 		while(opstack[numOps] != '('){
-			if(opstack[numOps] == '+')
-				gen(OPR, 0, ADD);
-			if(opstack[numOps] == '-')
-				gen(OPR, 0, SUB);
+
+			numOps--;
+
 			if(opstack[numOps] == '*')
 				gen(OPR, 0, MUL);
 			if(opstack[numOps] == '/')
 				gen(OPR, 0, DIV);
+			if(opstack[numOps] == '+')
+				gen(OPR, 0, ADD);
+			if(opstack[numOps] == '-')
+				gen(OPR, 0, SUB);
 
 			opstack[numOps] = 0;
-			numOps--;
+
 		}
 
-		// Pop the lparen
+		// Clear the lparen
 		opstack[numOps] = 0;
-		numOps--;
 
 		(*tempList) = (*tempList)->next;
 	}
