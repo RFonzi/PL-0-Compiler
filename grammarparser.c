@@ -198,7 +198,7 @@ void block (Token **tempList)
 
 	tempLevel--;
 
-	if(tempLevel > 0)
+	if(tempLevel >= 0)
 		deleteTopSymbolLevel();
 }
 
