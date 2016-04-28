@@ -14,6 +14,7 @@ int tempVal;       // number (ASCII value)
 int tempLevel = -1; // L level
 int tempAddr = 0;  // M address
 int codeCounter = 0; // Global code counter
+int parenCounter = 0; // Count the number of parens down we are;
 
 char opstack[500] = {0}; // Operator stack for converting infix to postfix
 int numOps = 0; // Number of operators in the operator stack
@@ -465,6 +466,20 @@ void expression (Token **tempList)
 					break;
 			}
 		}
+
+		// If the previous op was the same precidence, then pop it first.
+		if(numOps > 0){
+			if(opstack[numOps - 1] == '+'){
+				gen(OPR, 0, ADD);
+				opstack[numOps - 1] = 0;
+				numOps--;
+			}
+			else if(opstack[numOps - 1] == '-'){
+				gen(OPR, 0, SUB);
+				opstack[numOps - 1] = 0;
+				numOps--;
+			}
+		}
 		
 		if ((*tempList)->type == plussym)
 		{
@@ -484,20 +499,22 @@ void expression (Token **tempList)
 
 	//Pop the rest of the ops
 	//printf("# of ops this round is %d\n", numOps);
-	while(numOps > 0){
-		numOps--;
-	
-		if(opstack[numOps] == '*')
-			gen(OPR, 0, MUL);
-		if(opstack[numOps] == '/')
-			gen(OPR, 0, DIV);
-		if(opstack[numOps] == '+')
-			gen(OPR, 0, ADD);
-		if(opstack[numOps] == '-')
-			gen(OPR, 0, SUB);
+	if(parenCounter == 0){ // Only do this when we aren't in a paren expression
+		while(numOps > 0){
+			numOps--;
+		
+			if(opstack[numOps] == '*')
+				gen(OPR, 0, MUL);
+			if(opstack[numOps] == '/')
+				gen(OPR, 0, DIV);
+			if(opstack[numOps] == '+')
+				gen(OPR, 0, ADD);
+			if(opstack[numOps] == '-')
+				gen(OPR, 0, SUB);
 
 
-		opstack[numOps] = 0;
+			opstack[numOps] = 0;
+		}
 	}
 
 }
@@ -508,6 +525,21 @@ void term (Token **tempList)
 
 	while ((*tempList)->type == multsym || (*tempList)->type == slashsym)
 	{	
+
+		// If the previous op was the same precidence, then pop it first.
+		if(numOps > 0){
+			if(opstack[numOps - 1] == '*'){
+				gen(OPR, 0, MUL);
+				opstack[numOps - 1] = 0;
+				numOps--;
+			}
+			else if(opstack[numOps - 1] == '/'){
+				gen(OPR, 0, DIV);
+				opstack[numOps - 1] = 0;
+				numOps--;
+			}
+		}
+
 		if ((*tempList)->type == multsym)
 		{
 			// Push mult to the opstack
@@ -590,6 +622,7 @@ void factor(Token **tempList){
 		// Push lparen to the opstack
 		opstack[numOps] = '(';
 		numOps++;
+		parenCounter++; // Make sure we don't pop anything too early by using counters
 
 		(*tempList) = (*tempList)->next;
 
@@ -598,10 +631,10 @@ void factor(Token **tempList){
 		if((*tempList)->type != rparentsym)
 			error(RIGHTPAREN_MISSING);
 
+		parenCounter--;
+
 		// Pop every op from the opstack until a lparen is found
 		while(opstack[numOps] != '('){
-
-			numOps--;
 
 			if(opstack[numOps] == '*')
 				gen(OPR, 0, MUL);
@@ -613,6 +646,8 @@ void factor(Token **tempList){
 				gen(OPR, 0, SUB);
 
 			opstack[numOps] = 0;
+
+			numOps--;
 
 		}
 
