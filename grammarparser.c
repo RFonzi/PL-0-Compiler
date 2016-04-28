@@ -197,7 +197,9 @@ void block (Token **tempList)
 		gen(OPR, 0, 0); //Return
 
 	tempLevel--;
-	deleteTopSymbolLevel();
+
+	if(tempLevel > 0)
+		deleteTopSymbolLevel();
 }
 
 
@@ -251,7 +253,7 @@ void statement(Token **tempList){
 	if((*tempList)->type == identsym){
 
 		//Check to see if the identifier is actually a var
-		int i, found = 0, location;
+		int i , found = 0, location;
 		for(i = numSymbols; i >= 0; i--){
 			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 ){
 				if(symbolTable[i].kind != 2){
