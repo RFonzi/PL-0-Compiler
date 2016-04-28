@@ -153,6 +153,7 @@ void execute(){
             break;
         case SIO2:
             sp = sp + 1;
+            printf("Input required: ");
             scanf("%d", &stack[sp]);
             break;
         case SIO3:
