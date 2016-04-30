@@ -198,7 +198,7 @@ void block (Token **tempList)
 
 	tempLevel--;
 
-	if(tempLevel >= 0)
+	if(tempLevel > 0)
 		deleteTopSymbolLevel();
 }
 
@@ -253,9 +253,10 @@ void statement(Token **tempList){
 	if((*tempList)->type == identsym){
 
 		//Check to see if the identifier is actually a var
-		int i , found = 0, location;
+		int i = 0, found = 0, location;
 		for(i = numSymbols; i >= 0; i--){
-			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 ){
+			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0 &&
+				symbolTable[i].level <= tempLevel){
 				if(symbolTable[i].kind != 2){
 					error(ASSIGNMENT_TO_CONST_OR_PROC);
 				}
