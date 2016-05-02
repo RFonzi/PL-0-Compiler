@@ -207,7 +207,6 @@ void block (Token **tempList)
 
 	tempLevel--;
 	numParams = 0;
-	stackSize = 0;
 	
 	if(tempLevel > 0)
 		deleteTopSymbolLevel();
@@ -364,7 +363,6 @@ void statement(Token **tempList){
 			error(UNDECLARED_IDENTIFIER);
 
 			
-		stackSize = 0;
 		paramList(tempList);
 		
 		int stackCounter = 0;
@@ -379,11 +377,10 @@ void statement(Token **tempList){
 			}
 		}
 		
-		while (stackSize>0)
+		while (stackSize>(stackCounter+3))
 		{
-			
-			gen(STO, 0, stackCounter+3+stackSize);
-			stackSize--;
+			printf("The stackSize is: %d \n The stackCounter is: %d \n ", stackSize,stackCounter);
+			gen(STO, 0, stackSize);
 		}
 		
 		
@@ -543,7 +540,6 @@ void paramList (Token ** tempList){
 	if ((*tempList)->type != rparentsym)
 	{
 		expression(tempList);
-		stackSize++;
 		// generate code to store expression's result into first parameter slot
 	}
 	while ((*tempList)->type == commasym)
@@ -551,7 +547,6 @@ void paramList (Token ** tempList){
 		(*tempList) = (*tempList)->next;
 		
 		expression(tempList);
-		stackSize++;
 		// generate code to store expression's result into next parameter slot
 	}
 	
@@ -815,7 +810,6 @@ void factor(Token **tempList){
 		if(found == 0)
 			error(UNDECLARED_IDENTIFIER);
 	
-		stackSize = 0;
 		paramList(tempList);
 		
 		
@@ -833,11 +827,10 @@ void factor(Token **tempList){
 			}
 		}
 		
-		while (stackSize>0)
+		while (stackSize>(stackCounter+3))
 		{
-			printf("The stackSize is: %d \n The stackCounter is: %d \n ", stackSize,stackCounter);
-			gen(STO, 0, stackCounter+3+stackSize);
-			stackSize--;
+			//printf("The stackSize is: %d \n The stackCounter is: %d \n ", stackSize,stackCounter);
+			gen(STO, 0, stackSize);
 		}
 		
 		gen(CAL, tempLevel - symbolTable[location].level, symbolTable[location].val);
@@ -884,6 +877,35 @@ void gen(int opr, int l, int m){
 	code[codeCounter].op = opr;
 	code[codeCounter].l = l;
 	code[codeCounter].m = m;
-
+	
+	updateStackSize(opr,l,m);
+	
 	codeCounter++;
+}
+
+void updateStackSize (int opr, int l, int m)
+{
+	if (opr == LIT || opr == LOD || opr == SIO2)
+	{
+		stackSize++;
+	}
+	else if (opr == STO || opr == JPC || opr == SIO1)
+	{
+		stackSize--;
+	}
+	else if (opr == INC)
+	{
+		stackSize+=m;
+	}
+	else if (opr == OPR)
+	{
+		if (m == RET)
+		{
+			stackSize = 0;
+		}
+		else if (m!= NEG && m!= ODD)
+		{
+			stackSize--;
+		}
+	}
 }
