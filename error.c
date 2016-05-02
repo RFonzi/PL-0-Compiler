@@ -91,7 +91,21 @@ void error(int code){
         case BECOMES_MUST_FOLLOW_IDENT_IN_STATEMENT:
             printf("ERROR CODE %d: ':=' must follow identifier in statement\n", BECOMES_MUST_FOLLOW_IDENT_IN_STATEMENT);
             exit(0);
-
+		case PROC_MUST_HAVE_PARAMS:
+			printf("ERROR CODE %d: Procedure must have parameters \n", PROC_MUST_HAVE_PARAMS);
+            exit(0);
+		case IDENT_EXPECTED_AS_PARAM:
+			printf("ERROR CODE %d: Identifier expected as parameter \n", IDENT_EXPECTED_AS_PARAM);
+            exit(0);
+		case BAD_PROC_DECLARATION:
+			printf("ERROR CODE %d: Bad procedure declaration \n", BAD_PROC_DECLARATION);
+            exit(0);
+		case MISSING_PARAM_LIST:
+			printf("ERROR CODE %d: Missing parameter list at call \n", MISSING_PARAM_LIST);
+            exit(0);
+		case BAD_CALL_FORMATTING:
+			printf("ERROR CODE %d: Bad call formatting \n", BAD_CALL_FORMATTING);
+            exit(0);
 
     }
 }

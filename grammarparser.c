@@ -14,7 +14,9 @@ int tempVal;       // number (ASCII value)
 int tempLevel = -1; // L level
 int tempAddr = 0;  // M address
 int codeCounter = 0; // Global code counter
-int parenCounter = 0; // Count the number of parens down we are;
+int parenCounter = 0; // Count the number of parens down we are
+int numParams = 0; // number of parameters
+int stackSize = 0;
 
 char opstack[500] = {0}; // Operator stack for converting infix to postfix
 int numOps = 0; // Number of operators in the operator stack
@@ -123,7 +125,7 @@ void block (Token **tempList)
 		(*tempList) = (*tempList)->next;
 
 
-		addVar(tempKind, tempName, offset, tempLevel, tempAddr);
+		addVar(tempKind, tempName, offset+numParams, tempLevel, tempAddr);
 		offset++;
 
 		while ((*tempList)->type == commasym)
@@ -139,9 +141,10 @@ void block (Token **tempList)
 
 			//(*tempList) = (*tempList)->next;  //SKIP VAR NAME
 			(*tempList) = (*tempList)->next;
-
-			addVar(tempKind, tempName, offset, tempLevel, tempAddr);
+			
+			addVar(tempKind, tempName, offset+numParams, tempLevel, tempAddr);
 			offset++;
+			
 		}
 
 		if ((*tempList)->type != semicolonsym)
@@ -167,7 +170,12 @@ void block (Token **tempList)
 		(*tempList) = (*tempList)->next;
 
 		addProc(tempKind, tempName, tempLevel, codeCounter);
+		
+		addVar(2, "return", 0, tempLevel+1, tempAddr);
 
+		paramBlock(tempList);
+		
+		
 		if ((*tempList)->type != semicolonsym)
 		{
 			error(INCORRECT_SYM_AFTER_PROC_DECLARATION); // might change this
@@ -189,19 +197,69 @@ void block (Token **tempList)
 
 	}
 	code[jumpAddr].m = codeCounter;
-	gen(INC, 0, offset);
-
+	
+	gen(INC, 0, offset+numParams);
+	
 	statement (tempList);
 
 	if(tempLevel != 0)
 		gen(OPR, 0, 0); //Return
 
 	tempLevel--;
-
+	numParams = 0;
+	stackSize = 0;
+	
 	if(tempLevel > 0)
 		deleteTopSymbolLevel();
 }
 
+void paramBlock (Token **tempList)
+{
+	numParams= 0;
+	
+	if ((*tempList)->type != lparentsym)
+	{
+		error(PROC_MUST_HAVE_PARAMS); // proc needs params error
+	}
+	
+	(*tempList) = (*tempList)->next;
+	
+	if ((*tempList)->type == identsym)
+	{
+		tempKind = 2; 
+		
+		strcpy(tempName, (*tempList)->lexeme); //Store name of var
+
+		addVar(tempKind, tempName, 4+numParams, tempLevel+1, tempAddr);
+		numParams++;
+		
+		(*tempList) = (*tempList)->next;
+		
+		
+		while ((*tempList)->type == commasym)
+		{
+			(*tempList) = (*tempList)->next;
+			if ((*tempList)->type != identsym)
+			{
+				error(IDENT_EXPECTED_AS_PARAM); // needs error
+			}
+			
+			strcpy(tempName, (*tempList)->lexeme); //Store name of var
+
+			addVar(tempKind, tempName, 4+numParams, tempLevel+1, tempAddr);
+			numParams++;
+			
+			(*tempList) = (*tempList)->next;
+		}
+	}
+	
+	if ((*tempList)->type != rparentsym)
+	{
+		error(BAD_PROC_DECLARATION); // bad procedure declaration
+	}
+	
+	(*tempList) = (*tempList)->next;
+}
 
 void condition (Token **tempList)
 {
@@ -250,8 +308,10 @@ void condition (Token **tempList)
 }
 
 void statement(Token **tempList){
+	
+	//printf("The statement is: %s\n", (*tempList)->lexeme);
 	if((*tempList)->type == identsym){
-
+			
 		//Check to see if the identifier is actually a var
 		int i = 0, found = 0, location;
 		for(i = numSymbols; i >= 0; i--){
@@ -303,9 +363,33 @@ void statement(Token **tempList){
 		if(found == 0)
 			error(UNDECLARED_IDENTIFIER);
 
+			
+		stackSize = 0;
+		paramList(tempList);
+		
+		int stackCounter = 0;
+		for(i = 0; i < numSymbols; i++){
+			if(symbolTable[location].level +1 ==  symbolTable[i].level){
+				if(symbolTable[i].kind == 2){
+					if(strcmp(symbolTable[i].name, "return") != 0)
+					{
+						stackCounter++;
+					}
+				}
+			}
+		}
+		
+		while (stackSize>0)
+		{
+			
+			gen(STO, 0, stackCounter+3+stackSize);
+			stackSize--;
+		}
+		
+		
 		gen(CAL, tempLevel - symbolTable[location].level, symbolTable[location].val);
 
-		(*tempList) = (*tempList)->next;
+		//(*tempList) = (*tempList)->next; //this was at the end but i don't think it's needed anymore
 	}
 	else if((*tempList)->type == beginsym){
 
@@ -313,12 +397,12 @@ void statement(Token **tempList){
 		(*tempList) = (*tempList)->next;
 
 		statement(tempList);
-
+				
 		while((*tempList)->type == semicolonsym){
 			(*tempList) = (*tempList)->next;
 			statement(tempList);
 		}
-
+	
 		if((*tempList)->type != endsym)
 			error(INCORRECT_SYM_FOLLOWING_STATEMENT); //Might need to change this
 
@@ -436,6 +520,7 @@ void statement(Token **tempList){
 		}
 
 		gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].val);
+
 		gen(SIO1, 0, 1);
 	
 
@@ -443,6 +528,41 @@ void statement(Token **tempList){
 	}
 }
 
+void paramList (Token ** tempList){
+	
+
+	(*tempList) = (*tempList)->next;
+	
+	if ((*tempList)->type != lparentsym)
+	{
+		error(MISSING_PARAM_LIST);
+	}
+	
+	(*tempList) = (*tempList)->next;
+	
+	if ((*tempList)->type != rparentsym)
+	{
+		expression(tempList);
+		stackSize++;
+		// generate code to store expression's result into first parameter slot
+	}
+	while ((*tempList)->type == commasym)
+	{
+		(*tempList) = (*tempList)->next;
+		
+		expression(tempList);
+		stackSize++;
+		// generate code to store expression's result into next parameter slot
+	}
+	
+	if ((*tempList)->type != rparentsym)
+	{
+		error(BAD_CALL_FORMATTING);// need error "Bad call formatting"
+	}
+	
+	(*tempList) = (*tempList)->next;
+	
+}
 
 void expression (Token **tempList)
 {
@@ -605,8 +725,9 @@ void factor(Token **tempList){
 			gen(LOD, tempLevel - symbolTable[location].level, symbolTable[location].val);
 		
 		if (symbolTable[location].kind == 1)
+		{
 			gen(LIT, 0, symbolTable[location].val);
-		
+		}
 		if(isSignNeg)
 			gen(OPR, 0, NEG);
 
@@ -641,13 +762,25 @@ void factor(Token **tempList){
 		while(opstack[numOps] != '('){
 
 			if(opstack[numOps] == '*')
+			{
 				gen(OPR, 0, MUL);
+				
+			}
 			if(opstack[numOps] == '/')
+			{
 				gen(OPR, 0, DIV);
+				
+			}
 			if(opstack[numOps] == '+')
+			{
 				gen(OPR, 0, ADD);
+				
+			}
 			if(opstack[numOps] == '-')
+			{
 				gen(OPR, 0, SUB);
+				
+			}
 
 			opstack[numOps] = 0;
 
@@ -659,6 +792,58 @@ void factor(Token **tempList){
 		opstack[numOps] = 0;
 
 		(*tempList) = (*tempList)->next;
+	}
+	
+	else if((*tempList)->type == callsym){
+		(*tempList) = (*tempList)->next;
+
+		if((*tempList)->type != identsym)
+			error(IDENT_MUST_FOLLOW_CALL);
+
+		//Check to see if the identifier is actually a proc
+		int i, found = 0, location;
+		for(i = 0; i < numSymbols; i++){
+			if(strcmp((*tempList)->lexeme, symbolTable[i].name) == 0){
+				if(symbolTable[i].kind != 3){
+					error(UNDECLARED_IDENTIFIER);
+				}
+				found = 1;
+				location = i;
+			}
+		}
+
+		if(found == 0)
+			error(UNDECLARED_IDENTIFIER);
+	
+		stackSize = 0;
+		paramList(tempList);
+		
+		
+		//printf("The stackSize is: %d \n \n ", stackSize);
+		
+		int stackCounter = 0;
+		for(i = 0; i < numSymbols; i++){
+			if(symbolTable[location].level+1 ==  symbolTable[i].level){
+				if(symbolTable[i].kind == 2){
+					if(strcmp(symbolTable[i].name, "return") != 0)
+					{
+						stackCounter++;
+					}
+				}
+			}
+		}
+		
+		while (stackSize>0)
+		{
+			printf("The stackSize is: %d \n The stackCounter is: %d \n ", stackSize,stackCounter);
+			gen(STO, 0, stackCounter+3+stackSize);
+			stackSize--;
+		}
+		
+		gen(CAL, tempLevel - symbolTable[location].level, symbolTable[location].val);
+		gen(INC, 0, 1);
+
+		// (*tempList) = (*tempList)->next; //this was at the end but i don't think it's needed anymore
 	}
 	else{
 		error(PRECEDING_FACTOR_CANNOT_BEGIN_WITH_SYM);

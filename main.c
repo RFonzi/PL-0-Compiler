@@ -80,11 +80,13 @@ int main(int argc, char **argv){
         fprintf(fp, "\n");
     }
     // End outputting code store
-
+	
+	
     printf("Code store complete. Executing instructions...\n");
     fprintf(fp, "\n\n\n");
     fprintf(fp, "Line  OP    L     M     pc    bp    sp    stack\n");
 
+	
     while(!halt){
 
         fetch();
@@ -128,7 +130,7 @@ int main(int argc, char **argv){
         printf("Program halted successfully.\n");
     }
 
-
+	
     fclose(fp);
 
 
