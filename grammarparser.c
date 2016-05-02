@@ -17,6 +17,7 @@ int codeCounter = 0; // Global code counter
 int parenCounter = 0; // Count the number of parens down we are
 int numParams = 0; // number of parameters
 int stackSize = 0;
+int numStoNeeded = 0;
 
 char opstack[500] = {0}; // Operator stack for converting infix to postfix
 int numOps = 0; // Number of operators in the operator stack
@@ -364,7 +365,7 @@ void statement(Token **tempList){
 
 			
 		paramList(tempList);
-		
+		/*
 		int stackCounter = 0;
 		for(i = 0; i < numSymbols; i++){
 			if(symbolTable[location].level +1 ==  symbolTable[i].level){
@@ -377,10 +378,12 @@ void statement(Token **tempList){
 			}
 		}
 		
-		while (stackSize>(stackCounter+3))
+		int tempSize = stackSize;
+		*/
+		while (numStoNeeded>0)
 		{
-			printf("The stackSize is: %d \n The stackCounter is: %d \n ", stackSize,stackCounter);
-			gen(STO, 0, stackSize);
+			gen(STO, 0, stackSize+3);
+			numStoNeeded--;
 		}
 		
 		
@@ -527,6 +530,7 @@ void statement(Token **tempList){
 
 void paramList (Token ** tempList){
 	
+	numStoNeeded = 0;
 
 	(*tempList) = (*tempList)->next;
 	
@@ -540,6 +544,7 @@ void paramList (Token ** tempList){
 	if ((*tempList)->type != rparentsym)
 	{
 		expression(tempList);
+		numStoNeeded++;
 		// generate code to store expression's result into first parameter slot
 	}
 	while ((*tempList)->type == commasym)
@@ -547,6 +552,7 @@ void paramList (Token ** tempList){
 		(*tempList) = (*tempList)->next;
 		
 		expression(tempList);
+		numStoNeeded++;
 		// generate code to store expression's result into next parameter slot
 	}
 	
@@ -813,11 +819,10 @@ void factor(Token **tempList){
 		paramList(tempList);
 		
 		
-		//printf("The stackSize is: %d \n \n ", stackSize);
-		
+		/*
 		int stackCounter = 0;
 		for(i = 0; i < numSymbols; i++){
-			if(symbolTable[location].level+1 ==  symbolTable[i].level){
+			if(symbolTable[location].level +1 ==  symbolTable[i].level){
 				if(symbolTable[i].kind == 2){
 					if(strcmp(symbolTable[i].name, "return") != 0)
 					{
@@ -827,10 +832,12 @@ void factor(Token **tempList){
 			}
 		}
 		
-		while (stackSize>(stackCounter+3))
+		int tempSize = stackSize;
+		*/
+		while (numStoNeeded>0)
 		{
-			//printf("The stackSize is: %d \n The stackCounter is: %d \n ", stackSize,stackCounter);
-			gen(STO, 0, stackSize);
+			gen(STO, 0, stackSize+3);
+			numStoNeeded--;
 		}
 		
 		gen(CAL, tempLevel - symbolTable[location].level, symbolTable[location].val);
